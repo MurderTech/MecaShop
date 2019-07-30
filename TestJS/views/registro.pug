@@ -32,7 +32,7 @@ html(lang="en")
           select.js-typeacc-value.form-control.col-6.offset-3(id="cbxTypeAcc")
             option(value='0') Regular
             option(value='1') Socio
-          button.btn.btn-primary.btn-block.mt-3.col-4.offset-4(type="button", style="margin-bottom:15px;" id="btnLogin") Iniciar
+          button.btn.btn-primary.btn-block.mt-3.col-4.offset-4(type="button", style="margin-bottom:15px;" id="btnLogin") Registrarme
         
         .form-group
           label
@@ -50,35 +50,36 @@ html(lang="en")
           $(".js-form").fadeIn(1000);
 
           $("#btnLogin").click(function(){
-            alert($("#txtEmail").val());
-            $.ajax({
-              data: {
-                nombre: $("#txtNombre").val(),
-                user: $("#txtUser").val(),
-                pass: $("#txtPass").val(),
-                email: $("#txtEmail").val(),
-                typeAcc: $("#cbxTypeAcc").val(),
-              },
-              method: 'POST',
-              url: 'http://localhost:2525/registrar',
-              success: function(datos){
-                Swal.fire(
-                  'Usuario creado con éxito',
-                  'Inicie sesión',
-                  'success'
-                  )
-                  window.location.href = "http://localhost:2525/login";
-              }
-              
-            });
+            
+            if (($("#txtNombre").val() === "") || ($("#txtUser").val() === "")
+             || ($("#txtPass").val() === "") || ($("#txtEmail").val() === "") || ($("#cbxTypeAcc").val() === "")){
+              Swal.fire(
+                'Informacion incompleta',
+                'Complete el formulario',
+                'warning'
+              )
+            } else {
+              $.ajax({
+                data: {
+                  nombre: $("#txtNombre").val(),
+                  user: $("#txtUser").val(),
+                  pass: $("#txtPass").val(),
+                  email: $("#txtEmail").val(),
+                  typeAcc: $("#cbxTypeAcc").val(),
+                },
+                method: 'POST',
+                url: 'http://localhost:2525/registrar',
+                success: function(datos){
+                  Swal.fire(
+                    'Usuario creado con éxito',
+                    'Inicie sesión',
+                    'success'
+                    ).then((value)=>{
+                      window.location.href = "http://localhost:2525/login";
+                    });
+                }
+                
+              });
+            }
           });
         });
-
-        function setLogin(_id, _usuario, _nombre) {
-          var d = new Date();
-          d.setTime(d.getTime() + (60*24*60*60*1000));
-          var expires = "expires="+ d.toUTCString();
-          document.cookie = "id ="+_id+";" + expires + ";path=/";
-          document.cookie = "usuario ="+_usuario+";" + expires + ";path=/";
-          document.cookie = "nombre ="+_nombre+";" + expires + ";path=/";
-        }
