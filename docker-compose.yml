@@ -1,0 +1,31 @@
+version: '3.1'
+
+services:
+  web:
+    build:
+      context: .
+      dockerfile: ./docker/express/Dockerfile
+    container_name: ejem182_ex01
+    command: bash -c "npm install && nodemon app.js"
+    env_file:
+     - ./.env
+    hostname: ejem182_ex01
+    ports:
+      - "2525:2525"
+    volumes:
+      - ./TestJS:/code
+      - /code/node_modules
+    restart: always
+  db:
+    build:
+      context: .
+      dockerfile: ./docker/mongodb/Dockerfile
+    container_name: MongoDBMS
+    env_file:
+     - ./.env
+    hostname: ejem182_db01
+    ports:
+      - "27017:27017"
+    volumes:
+      - ./mongo-data:/data/db
+    restart: always

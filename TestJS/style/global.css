@@ -1,0 +1,24 @@
+.title-css{
+    color : #036016;
+}
+
+.cardinfo-css{
+    background-color: #E8FCCF;
+    padding : 10px;
+}
+
+.cardinfo-css:hover{
+    cursor: pointer;
+    background-color: rgb(255, 192, 55);
+    padding : 10px;
+
+}
+
+.img-card-css{
+    width : 100%;
+    border-radius: 15%;
+}
+
+.img-logo{
+    width : 35px;
+}

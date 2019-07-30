@@ -1,0 +1,74 @@
+extends base.pug
+
+block content
+  form.js-form.col-12.col(style="text-align : center;")
+    span.text-muted
+      strong Comprobar Funcionalidad
+    .form-group.card
+      h1 Aqui puedes probar tu ambiente
+      label
+        strong Coloca el nombre de tu proyecto:
+      input.js-form-value.form-control.col-6.offset-3(type="text")
+      button.btn.btn-primary.btn-block.mt-3.col-6.offset-3(type="submit", style="margin-bottom:15px;") Verificar!
+
+block extra_js
+  script.
+    (function(){
+      var Module = {
+        Controls: {
+          form: document.querySelector('.js-form'),
+          input: document.querySelector('.js-form-value'),
+        },
+        Handlers: {
+          onFormSubmit: function(event){
+            event.preventDefault();
+            if (Module.Controls.input.value === ''){
+              Swal.fire({
+                title: 'Esta en blanco :(',
+                text: 'No has especificado nada',
+                type: 'error',
+                confirmButtonText: 'Reintentar'
+              });
+            }else{
+              $.ajax({
+                data: {
+                  project: Module.Controls.input.value
+                },
+                method: 'POST'
+              }).then(Module.Handlers.onFormSubmitSuccess)
+                .catch(Module.Handlers.onFormSubmitError);
+            }
+            
+          },
+          onFormSubmitSuccess: function(resp){
+            console.log(resp.message);
+            if (resp.message != 'Error')
+            {
+              Swal.fire({
+                title: 'Bien! :)',
+                text: resp.message,
+                type: 'success',
+                confirmButtonText: 'Dale'
+              });
+            }else{
+              Swal.fire({
+                title: 'Uii no!',
+                text: 'algo quedo mal...',
+                type: 'error',
+                confirmButtonText: 'Bad'
+              });
+            }
+          },
+          onFormSubmitError: function(err){
+            console.log(err);
+          },
+        },
+        Methods:{
+          init: function(){
+            Module.Controls.form.addEventListener('submit', Module.Handlers.onFormSubmit)
+          }
+        }
+      }
+      Module.Methods.init();
+    })();
+    

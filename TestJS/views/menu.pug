@@ -1,0 +1,116 @@
+extends base.pug
+
+block content
+  form.js-form.col-12.col(style="text-align : center;margin-top:60px;")
+    span.text-muted
+      strong ¡Hola! ¿Cómo puedo ayudarte?
+    .form-group.card
+      h1 ¡Mira estas ofertas!
+    .row(id="js_ofertas")
+      //.card.col-12.col-sm-12.col-md-6.col-lg-4.cardinfo-css(style="position:static;")
+        .row
+          .col-4
+            img.img-card-css(src="images/mecanicoFlex.jpg")
+          .col-8
+            h3.title-css 30% de descuento
+            h5 en tu cambio de aceite
+        .row
+          .col-12 
+            p.text-muted(style="font-size : 10px") Valido desde 1 de agosto de 2019 hasta 31 de octubre de 2019
+      
+      //.card.col-12.col-sm-12.col-md-6.col-lg-4.cardinfo-css(style="position:static;")
+        .row
+          .col-4
+            img.img-card-css(src="images/realMeca.png")
+          .col-8
+            h3.title-css 10% de descuento
+            h5 Cambio de link
+        .row
+          .col-12 
+            p.text-muted(style="font-size : 10px") Valido desde 5 de agosto de 2019 hasta 31 de septiembre de 2019
+
+      //.card.col-12.col-sm-12.col-md-6.col-lg-4.cardinfo-css(style="position:static;")
+        .row
+          .col-4
+            img.img-card-css(src="images/Drivingi.jpg")
+          .col-8
+            h3.title-css 70% de descuento
+            h5 Chequeo eléctrico
+        .row
+          .col-12 
+            p.text-muted(style="font-size : 10px") Valido desde 27 de agosto de 2019 hasta 5 de octubre de 2019
+
+      //.card.col-12.col-sm-12.col-md-6.col-lg-4.cardinfo-css(style="position:static;")
+        .row
+          .col-4
+            img.img-card-css(src="images/Detailing.png")
+          .col-8
+            h3.title-css 5% de descuento
+            h5 Limpieza de interiores
+        .row
+          .col-12 
+            p.text-muted(style="font-size : 10px") Valido desde 1 de agosto de 2019 hasta 31 de octubre de 2019
+
+block extra_js
+  script.
+    $(document).ready(function(){
+      //alert('Se ejecuta bien');
+      //$("#js_ofertas").empty();
+        if (getCookie("id")==="") {
+          window.location.href = "http://localhost:2525/login";
+        }
+
+        $.ajax({
+        data: {
+        },
+        url: 'http://localhost:2525/cupones',
+        method: 'POST',
+        
+        success: function(datos){
+          console.log(datos.cupones);
+          console.log(datos.cupones.length);
+          var i = 0;
+          $("#js_ofertas").hide();
+          while (i < datos.cupones.length){
+            console.log(datos.cupones[i]);
+            $("#js_ofertas").append(
+              `<div class="card col-12 col-sm-12 col-md-6 col-lg-4 cardinfo-css" style="position:static;">
+                <div class="row">
+                  <div class="col-4">
+                    <img class="img-card-css" src="images/${datos.cupones[i].imagen}">
+                  </div>
+                    <div class="col-8">
+                      <h3 class="title-css">${datos.cupones[i].title}</h3>
+                      <h5>${datos.cupones[i].desc}</h5>
+                    </div>
+                  </div>
+                  <div class="row">
+                    <div class="col-12">
+                      <p class="text-muted" style="font-size : 10px">${datos.cupones[i].param}</p>
+                    </div>
+                  </div>
+                </div>`
+            );
+            i++;
+          }
+          $("#js_ofertas").fadeIn(500);
+        }
+      });
+    });
+
+    function getCookie(cname) {
+      var name = cname + "=";
+      var decodedCookie = decodeURIComponent(document.cookie);
+      var ca = decodedCookie.split(';');
+      for(var i = 0; i <ca.length; i++) {
+        var c = ca[i];
+        while (c.charAt(0) == ' ') {
+          c = c.substring(1);
+        }
+        if (c.indexOf(name) == 0) {
+          return c.substring(name.length, c.length);
+        }
+      }
+      return "";
+    }
+    

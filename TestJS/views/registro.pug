@@ -1,0 +1,84 @@
+<!DOCTYPE html>
+html(lang="en")
+  head
+    meta(charset="UTF-8")
+    meta(name="viewport", content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=0")
+    meta(http-equiv="X-UA-Compatible", content="ie=edge")
+    title MecaShop
+    link(rel="stylesheet", href="/public/vendors/bootstrap/css/bootstrap.min.css")
+    link(rel="stylesheet", href="/style/global.css")
+    block extra_css
+    body
+      form.js-form.col-12.col(style="text-align : center;margin-top:100px; display:none;")
+        .form-group.card
+          h1 Registrate ahora!
+          label
+            strong Nombre de Pila:
+          input.js-user-value.form-control.col-6.offset-3(type="text", style="text-align:center;" id="txtNombre")
+          label
+            strong Usuario:
+          input.js-user-value.form-control.col-6.offset-3(type="text", style="text-align:center;" id="txtUser")
+          label
+            strong Contraseña:
+          input.js-pass-value.form-control.col-6.offset-3(type="password", style="text-align:center;" id="txtPass")
+          label
+            strong Confirmar contraseña:
+          input.js-pass-value.form-control.col-6.offset-3(type="password", style="text-align:center;" id="txtPassConfirm")
+          label
+            strong Correo:
+          input.js-email-value.form-control.col-6.offset-3(type="email", style="text-align:center;" id="txtEmail")
+          label
+            strong Tipo de cuenta:
+          select.js-typeacc-value.form-control.col-6.offset-3(id="cbxTypeAcc")
+            option(value='0') Regular
+            option(value='1') Socio
+          button.btn.btn-primary.btn-block.mt-3.col-4.offset-4(type="button", style="margin-bottom:15px;" id="btnLogin") Iniciar
+        
+        .form-group
+          label
+            strong Ya tienes Cuenta? 
+              a(href="http://localhost:2525/login") Inicia sesion aquí
+      script(src="/public/vendors/jquery/jquery-3.4.1.min.js")
+      script(src="/public/vendors/bootstrap/js/bootstrap.min.js")
+      script(src="/public/vendors/sweetalert2/dist/sweetalert2.all.min.js")
+      
+      
+      
+      //Aqui es el tema del login
+      script.
+        $(document).ready(function(){
+          $(".js-form").fadeIn(1000);
+
+          $("#btnLogin").click(function(){
+            alert($("#txtEmail").val());
+            $.ajax({
+              data: {
+                nombre: $("#txtNombre").val(),
+                user: $("#txtUser").val(),
+                pass: $("#txtPass").val(),
+                email: $("#txtEmail").val(),
+                typeAcc: $("#cbxTypeAcc").val(),
+              },
+              method: 'POST',
+              url: 'http://localhost:2525/registrar',
+              success: function(datos){
+                Swal.fire(
+                  'Usuario creado con éxito',
+                  'Inicie sesión',
+                  'success'
+                  )
+                  window.location.href = "http://localhost:2525/login";
+              }
+              
+            });
+          });
+        });
+
+        function setLogin(_id, _usuario, _nombre) {
+          var d = new Date();
+          d.setTime(d.getTime() + (60*24*60*60*1000));
+          var expires = "expires="+ d.toUTCString();
+          document.cookie = "id ="+_id+";" + expires + ";path=/";
+          document.cookie = "usuario ="+_usuario+";" + expires + ";path=/";
+          document.cookie = "nombre ="+_nombre+";" + expires + ";path=/";
+        }
