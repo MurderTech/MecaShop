@@ -9,7 +9,7 @@ html(lang="en")
     link(rel="stylesheet", href="/style/global.css")
     block extra_css
     body
-      form.js-form.col-12.col(style="text-align : center;margin-top:100px; display:none;")
+      form.js-form.col-10.offset-1.col-sm-8.offset-sm-2.col-md-6.offset-md-3.col-lg-4.offset-lg-4.col-lx-4.offset-lx-4(style="text-align : center;margin-top:100px; display:none;")
         .form-group.card
           h1 Iniciar Sesión
           label
@@ -49,13 +49,13 @@ html(lang="en")
                 console.log(datos.logines.length);
 
                 if (datos.logines.length > 0) {
-                  setLogin(datos.logines[0].id, datos.logines[0].usuario, datos.logines[0].nombre);
+                  setLogin(datos.logines[0].id, datos.logines[0].usuario, datos.logines[0].nombre, datos.logines[0].email, datos.logines[0].typeAcc);
 
                   window.location.href = ".";
 
                 } else {
                   Swal.fire(
-                    'Usuraio o contraseña invalido',
+                    'Usuario o contraseña invalido',
                     'Reintentar',
                     'warning'
                   );
@@ -65,7 +65,7 @@ html(lang="en")
           });
         });
 
-        function setLogin(_id, _usuario, _nombre) {
+        function setLogin(_id, _usuario, _nombre, _) {
           var d = new Date();
           d.setTime(d.getTime() + (60*24*60*60*1000));
           var expires = "expires="+ d.toUTCString();

@@ -16,6 +16,10 @@ const userSC = new Schema({
         type: String,
         //required: [true, ['Contraseña requerida']]
     },
+    ruc: {
+        type: String,
+        //required: [true, ['Contraseña requerida']]
+    },
     nombre: {
         type: String
     },
@@ -26,6 +30,9 @@ const userSC = new Schema({
     email : {
         type: String,
         //required: [true['Especifíque el tipo de cuenta']]
+    },
+    estatus : {
+        type : Number,
     }
 
 });

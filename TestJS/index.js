@@ -56,7 +56,7 @@ app.post('/cupones', (req, res) => {
 });
 
 app.post('/logines', (req, res) => {
-/*  res.json({message: `${logstart(user, data)}`});*/
+/*  PROCESO DE LOGIN*/
   const { user, pass } = req.body;
   usuario.find({ $and: [ 
     { usuario: user }, 
@@ -78,7 +78,7 @@ app.post('/logines', (req, res) => {
 
 
 app.post('/registrar', (req, res) => {
-  /*  res.json({message: `${logstart(user, data)}`});*/
+  /* AQUI SE REGISTRAN LOS NUEVOS USUARIOS */
 
     var usr = new usuario();
 
@@ -88,12 +88,18 @@ app.post('/registrar', (req, res) => {
         if (err) {
           console.log(err);
         }
-        usr.id = maxusr[0].id+1
+        if (maxusr[0] !== undefined){
+          usr.id = maxusr[0].id+1
+        } else {
+          usr.id = 0;
+        }
         usr.nombre = req.body.nombre
         usr.usuario = req.body.user
         usr.pass = req.body.pass
         usr.email = req.body.email
         usr.typeAcc = req.body.typeAcc
+        usr.ruc = req.body.ruc
+        usr.estatus = 1
 
         usr.save(function(err){
           if (err) {
@@ -113,7 +119,6 @@ app.post('/registrar', (req, res) => {
 
     newID();
     
-    //console.log(idAuto);
   });
 //PETICIONES
 
