@@ -23,7 +23,7 @@ html(lang="en")
         .form-group
           label
             strong No tienes una cuenta? 
-              a(href="http://localhost:2525/registro") Registrate Ahora!
+              a(href="./registro") Registrate Ahora!
       script(src="/public/vendors/jquery/jquery-3.4.1.min.js")
       script(src="/public/vendors/bootstrap/js/bootstrap.min.js")
       script(src="/public/vendors/sweetalert2/dist/sweetalert2.all.min.js")
@@ -33,6 +33,7 @@ html(lang="en")
       //Aqui es el tema del login
       script.
         $(document).ready(function(){
+          delete_cookie();
           $(".js-form").fadeIn(1000);
 
           $("#btnLogin").click(function(){
@@ -42,7 +43,7 @@ html(lang="en")
                 pass: $("#txtPass").val(),
               },
               method: 'POST',
-              url: 'http://localhost:2525/logines',
+              url: './logines',
               success: function(datos){
                 console.log(datos.logines);
                 console.log(datos.logines.length);
@@ -50,7 +51,7 @@ html(lang="en")
                 if (datos.logines.length > 0) {
                   setLogin(datos.logines[0].id, datos.logines[0].usuario, datos.logines[0].nombre);
 
-                  window.location.href = "http://localhost:2525";
+                  window.location.href = ".";
 
                 } else {
                   Swal.fire(
@@ -71,4 +72,10 @@ html(lang="en")
           document.cookie = "id ="+_id+";" + expires + ";path=/";
           document.cookie = "usuario ="+_usuario+";" + expires + ";path=/";
           document.cookie = "nombre ="+_nombre+";" + expires + ";path=/";
+        }
+
+        function delete_cookie() {
+          document.cookie = 'id = ; expires=Thu, 01 Jan 1970 00:00:01 GMT;';
+          document.cookie = 'usuario = ; expires=Thu, 01 Jan 1970 00:00:01 GMT;';
+          document.cookie = 'nombre = ; expires=Thu, 01 Jan 1970 00:00:01 GMT;';
         }

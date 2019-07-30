@@ -37,7 +37,7 @@ html(lang="en")
         .form-group
           label
             strong Ya tienes Cuenta? 
-              a(href="http://localhost:2525/login") Inicia sesion aquí
+              a(href="./login") Inicia sesion aquí
       script(src="/public/vendors/jquery/jquery-3.4.1.min.js")
       script(src="/public/vendors/bootstrap/js/bootstrap.min.js")
       script(src="/public/vendors/sweetalert2/dist/sweetalert2.all.min.js")
@@ -68,14 +68,14 @@ html(lang="en")
                   typeAcc: $("#cbxTypeAcc").val(),
                 },
                 method: 'POST',
-                url: 'http://localhost:2525/registrar',
+                url: './registrar',
                 success: function(datos){
                   Swal.fire(
                     'Usuario creado con éxito',
                     'Inicie sesión',
                     'success'
                     ).then((value)=>{
-                      window.location.href = "http://localhost:2525/login";
+                      window.location.href = "./login";
                     });
                 }
                 

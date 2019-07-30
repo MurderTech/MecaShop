@@ -7,49 +7,6 @@ block content
     .form-group.card
       h1 ¡Mira estas ofertas!
     .row(id="js_ofertas")
-      //.card.col-12.col-sm-12.col-md-6.col-lg-4.cardinfo-css(style="position:static;")
-        .row
-          .col-4
-            img.img-card-css(src="images/mecanicoFlex.jpg")
-          .col-8
-            h3.title-css 30% de descuento
-            h5 en tu cambio de aceite
-        .row
-          .col-12 
-            p.text-muted(style="font-size : 10px") Valido desde 1 de agosto de 2019 hasta 31 de octubre de 2019
-      
-      //.card.col-12.col-sm-12.col-md-6.col-lg-4.cardinfo-css(style="position:static;")
-        .row
-          .col-4
-            img.img-card-css(src="images/realMeca.png")
-          .col-8
-            h3.title-css 10% de descuento
-            h5 Cambio de link
-        .row
-          .col-12 
-            p.text-muted(style="font-size : 10px") Valido desde 5 de agosto de 2019 hasta 31 de septiembre de 2019
-
-      //.card.col-12.col-sm-12.col-md-6.col-lg-4.cardinfo-css(style="position:static;")
-        .row
-          .col-4
-            img.img-card-css(src="images/Drivingi.jpg")
-          .col-8
-            h3.title-css 70% de descuento
-            h5 Chequeo eléctrico
-        .row
-          .col-12 
-            p.text-muted(style="font-size : 10px") Valido desde 27 de agosto de 2019 hasta 5 de octubre de 2019
-
-      //.card.col-12.col-sm-12.col-md-6.col-lg-4.cardinfo-css(style="position:static;")
-        .row
-          .col-4
-            img.img-card-css(src="images/Detailing.png")
-          .col-8
-            h3.title-css 5% de descuento
-            h5 Limpieza de interiores
-        .row
-          .col-12 
-            p.text-muted(style="font-size : 10px") Valido desde 1 de agosto de 2019 hasta 31 de octubre de 2019
 
 block extra_js
   script.
@@ -57,13 +14,13 @@ block extra_js
       //alert('Se ejecuta bien');
       //$("#js_ofertas").empty();
         if (getCookie("id")==="") {
-          window.location.href = "http://localhost:2525/login";
+          window.location.href = "./login";
         }
 
         $.ajax({
         data: {
         },
-        url: 'http://localhost:2525/cupones',
+        url: './cupones',
         method: 'POST',
         
         success: function(datos){
