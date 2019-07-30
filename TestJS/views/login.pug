@@ -49,9 +49,22 @@ html(lang="en")
                 console.log(datos.logines.length);
 
                 if (datos.logines.length > 0) {
-                  setLogin(datos.logines[0].id, datos.logines[0].usuario, datos.logines[0].nombre, datos.logines[0].email, datos.logines[0].typeAcc);
+                  if (datos.logines[0].estatus === 1){
+                    setLogin(datos.logines[0].id,
+                            datos.logines[0].usuario,
+                            datos.logines[0].ruc,
+                            datos.logines[0].nombre,
+                            datos.logines[0].email,
+                            datos.logines[0].typeAcc);
 
-                  window.location.href = ".";
+                    window.location.href = ".";
+                  } else {
+                    Swal.fire(
+                      'Vaya! parece que ha sido dado de baja',
+                      'Si piensa que esto ha sido una equivocación, puede comunicarse con los administradores.',
+                      'error'
+                    );
+                  }
 
                 } else {
                   Swal.fire(
