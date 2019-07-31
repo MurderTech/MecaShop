@@ -7,48 +7,58 @@ html(lang="en")
     title MecaShop
     link(rel="stylesheet", href="/public/vendors/bootstrap/css/bootstrap.min.css")
     link(rel="stylesheet", href="/style/global.css")
+    link(rel="icon" type="image/png" href="images/Index.png")
     block extra_css
-    body
-      form.js-form.col-10.offset-1.col-sm-8.offset-sm-2.col-md-6.offset-md-3.col-lg-4.offset-lg-4.col-lx-4.offset-lx-4(style="text-align : center;margin-top:100px; display:none;")
+    body(style="background-image:url(images/bgLogin.jpg); background-repeat: no-repeat; background-size: cover;")
+      form.js-form.col-10.offset-1.col-sm-8.offset-sm-2.col-md-8.offset-md-2.col-lg-10.offset-lg-1.col-lx-10.offset-lx-1(style="text-align : center;margin-top:15px; display:none;")
         .form-group.card
-          h1 Registrate ahora!
-          label
-            strong Nombre de Pila:
-          input.js-user-value.form-control.col-8.offset-2(type="text", style="text-align:center;" id="txtNombre")
-          label
-            strong Usuario:
-          input.js-user-value.form-control.col-8.offset-2(type="text", style="text-align:center;" id="txtUser")
-          label
-            strong Contraseña:
-          input.js-pass-value.form-control.col-8.offset-2(type="password", style="text-align:center;" id="txtPass")
-          label
-            strong Confirmar contraseña:
-          input.js-pass-value.form-control.col-8.offset-2(type="password", style="text-align:center;" id="txtPassConfirm")
+          h1 ¡Registrate ahora!
+          .row
+            .col-12.col-sm-12.col-md-6.col-lg-4
+              label
+                strong Nombre de Pila:
+              input.js-user-value.form-control.col-10.offset-1(type="text", style="text-align:center;" id="txtNombre")
+            .col-12.col-sm-12.col-md-6.col-lg-4
+              label
+                strong Usuario:
+              input.js-user-value.form-control.col-10.offset-1(type="text", style="text-align:center;" id="txtUser")
+            .col-12.col-sm-12.col-md-6.col-lg-4
+              label
+                strong Contraseña:
+              input.js-pass-value.form-control.col-10.offset-1(type="password", style="text-align:center;" id="txtPass")
+          .row
+            .col-12.col-sm-12.col-md-6.col-lg-4
+              label
+                strong Confirmar contraseña:
+              input.js-pass-value.form-control.col-10.offset-1(type="password", style="text-align:center;" id="txtPassConfirm")
+            .col-12.col-sm-12.col-md-6.col-lg-4
+              label
+                strong Correo:
+              input.js-email-value.form-control.col-10.offset-1(type="text", style="text-align:center;" id="txtEmail")
+            .col-12.col-sm-12.col-md-6.col-lg-4
+              label
+                strong Tipo de cuenta:
+              select.js-typeacc-value.form-control.col-10.offset-1(id="cbxTypeAcc")
+                option(value='0') Estandar
+                option(value='1') Socio
+          .row
+            .col-12.col-sm-12.col-md-6.col-lg-4
+              label
+                strong Tipo de documento:
+              select.form-control.col-10.offset-1(id="cbxTypeID")
+                option(value='0') Cédula
+                option(value='1') Ruc
+                option(value='2') Pasaporte
+            .col-12.col-sm-12.col-md-6.col-lg-4
+              label
+                strong No. Identificación:
+              input.form-control.col-10.offset-1(type="text", style="text-align:center;display=inline-flex;" id="txtRuc" onkeyup="this.value = this.value.toUpperCase();")
           br
-          .form-control.col-8.offset-2
+          button.btn.btn-primary.btn-block.mt-3.col-6.offset-3(type="button", style="margin-bottom:15px;" id="btnLogin") Registrarme
+          .form-group
             label
-              strong Identificación:
-            select.form-control(id="cbxTypeID")
-              option(value='0') Cédula
-              option(value='1') Ruc
-              option(value='2') Pasaporte
-            br
-            input.form-control(type="text", style="text-align:center;display=inline-flex;" id="txtRuc" onkeyup="this.value = this.value.toUpperCase();")
-
-          label
-            strong Correo:
-          input.js-email-value.form-control.col-8.offset-2(type="text", style="text-align:center;" id="txtEmail")
-          label
-            strong Tipo de cuenta:
-          select.js-typeacc-value.form-control.col-8.offset-2(id="cbxTypeAcc")
-            option(value='0') Estandar
-            option(value='1') Socio
-          button.btn.btn-primary.btn-block.mt-3.col-4.offset-4(type="button", style="margin-bottom:15px;" id="btnLogin") Registrarme
-        
-        .form-group
-          label
-            strong Ya tienes Cuenta? 
-              a(href="./login") Inicia sesion aquí
+              strong Ya tienes Cuenta? 
+                a(href="./login") Inicia sesion aquí
       script(src="/public/vendors/jquery/jquery-3.4.1.min.js")
       script(src="/public/vendors/bootstrap/js/bootstrap.min.js")
       script(src="/public/vendors/sweetalert2/dist/sweetalert2.all.min.js")

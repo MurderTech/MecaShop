@@ -7,23 +7,26 @@ html(lang="en")
     title MecaShop
     link(rel="stylesheet", href="/public/vendors/bootstrap/css/bootstrap.min.css")
     link(rel="stylesheet", href="/style/global.css")
+    link(rel="icon" type="image/png" href="images/Index.png")
     block extra_css
-    body
+    body(style="background-color:dimgray")
       form.js-form.col-10.offset-1.col-sm-8.offset-sm-2.col-md-6.offset-md-3.col-lg-4.offset-lg-4.col-lx-4.offset-lx-4(style="text-align : center;margin-top:100px; display:none;")
         .form-group.card
           h1 Iniciar Sesión
-          label
-            strong Usuario:
-          input.js-user-value.form-control.col-6.offset-3(type="text", style="text-align:center;" id="txtUser")
-          label
-            strong Contraseña:
-          input.js-pass-value.form-control.col-6.offset-3(type="password", style="text-align:center;" id="txtPass")
-          button.btn.btn-primary.btn-block.mt-3.col-4.offset-4(type="button", style="margin-bottom:15px;" id="btnLogin") Iniciar
+          .row
+            .col-12.col-sm-12.col-md-12.col-lg-12
+              label
+                strong Usuario:
+              input.js-user-value.form-control.col-6.offset-3(type="text", style="text-align:center;" id="txtUser")
+              label
+                strong Contraseña:
+              input.js-pass-value.form-control.col-6.offset-3(type="password", style="text-align:center;" id="txtPass")
+              button.btn.btn-primary.btn-block.mt-3.col-4.offset-4(type="button", style="margin-bottom:15px;" id="btnLogin") Iniciar
+              .form-group
+                label
+                  strong No tienes una cuenta? 
+                    a(href="./registro") Registrate Ahora!
         
-        .form-group
-          label
-            strong No tienes una cuenta? 
-              a(href="./registro") Registrate Ahora!
       script(src="/public/vendors/jquery/jquery-3.4.1.min.js")
       script(src="/public/vendors/bootstrap/js/bootstrap.min.js")
       script(src="/public/vendors/sweetalert2/dist/sweetalert2.all.min.js")
