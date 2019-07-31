@@ -78,17 +78,23 @@ html(lang="en")
           });
         });
 
-        function setLogin(_id, _usuario, _nombre, _) {
+        function setLogin(_id, _usuario, _ruc, _nombre, _email, _typeAcc) {
           var d = new Date();
           d.setTime(d.getTime() + (60*24*60*60*1000));
           var expires = "expires="+ d.toUTCString();
           document.cookie = "id ="+_id+";" + expires + ";path=/";
           document.cookie = "usuario ="+_usuario+";" + expires + ";path=/";
+          document.cookie = "ruc ="+_ruc+";" + expires + ";path=/";
           document.cookie = "nombre ="+_nombre+";" + expires + ";path=/";
+          document.cookie = "email ="+_email+";" + expires + ";path=/";
+          document.cookie = "typeAcc ="+_typeAcc+";" + expires + ";path=/";
         }
 
         function delete_cookie() {
           document.cookie = 'id = ; expires=Thu, 01 Jan 1970 00:00:01 GMT;';
           document.cookie = 'usuario = ; expires=Thu, 01 Jan 1970 00:00:01 GMT;';
+          document.cookie = 'ruc = ; expires=Thu, 01 Jan 1970 00:00:01 GMT;';
           document.cookie = 'nombre = ; expires=Thu, 01 Jan 1970 00:00:01 GMT;';
+          document.cookie = 'email = ; expires=Thu, 01 Jan 1970 00:00:01 GMT;';
+          document.cookie = 'typeAcc = ; expires=Thu, 01 Jan 1970 00:00:01 GMT;';
         }

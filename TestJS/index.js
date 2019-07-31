@@ -34,6 +34,10 @@ app.get('/login', (req, res) => {
 app.get('/registro', (req, res) => {
   res.render('registro.pug');
 });
+
+app.get('/musers', (req, res) => {
+  res.render('mant_user.pug');
+});
 //REDIRECCIONES
 
 
@@ -51,6 +55,23 @@ app.post('/cupones', (req, res) => {
       //console.log(`pase por cupones ${res.json}`);
       res.json({
           cupones,
+      });
+  });
+});
+
+app.post('/list_user', (req, res) => {
+  //PARA LISTAR TODOS LOS USUARIOS
+  usuario.find({})
+  .exec((err, user) => {
+      if (err) {
+          res.status(400).json({
+              exito: false,
+              err
+          });
+      }
+      //console.log(`pase por cupones ${res.json}`);
+      res.json({
+          user,
       });
   });
 });

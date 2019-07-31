@@ -13,9 +13,6 @@ block extra_js
     $(document).ready(function(){
       //alert('Se ejecuta bien');
       //$("#js_ofertas").empty();
-        if (getCookie("id")==="") {
-          window.location.href = "./login";
-        }
 
         $.ajax({
         data: {
@@ -54,20 +51,4 @@ block extra_js
         }
       });
     });
-
-    function getCookie(cname) {
-      var name = cname + "=";
-      var decodedCookie = decodeURIComponent(document.cookie);
-      var ca = decodedCookie.split(';');
-      for(var i = 0; i <ca.length; i++) {
-        var c = ca[i];
-        while (c.charAt(0) == ' ') {
-          c = c.substring(1);
-        }
-        if (c.indexOf(name) == 0) {
-          return c.substring(name.length, c.length);
-        }
-      }
-      return "";
-    }
     

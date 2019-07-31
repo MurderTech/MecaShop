@@ -7,6 +7,7 @@ html(lang="en")
     title MecaShop
     link(rel="stylesheet", href="/public/vendors/bootstrap/css/bootstrap.min.css")
     link(rel="stylesheet", href="/style/global.css")
+    link(rel="icon" type="image/png" href="images/Index.png")
     block extra_css
   body
     nav.navbar.navbar-expand-lg.navbar-dark.bg-dark.fixed-top(id="navarizado")
@@ -20,11 +21,17 @@ html(lang="en")
             a.nav-link(href='.')
               | Inicio 
               span.sr-only (current)
-          li.nav-item
-            a.nav-link(href='#' id="btnAdmin") Administración
+          li#btnAdmin.nav-item.dropdown
+            a#navbarDropdown.nav-link.dropdown-toggle(href='#', role='button', data-toggle='dropdown', aria-haspopup='true', aria-expanded='false')
+              span Administración
+            .dropdown-menu(aria-labelledby='navbarDropdown')
+              a.dropdown-item(href='./musers') Usuarios
+              a.dropdown-item(href='#') Cupones
+              a.dropdown-item(href='#') Pedidos
+          
           li.nav-item.dropdown
             a#navbarDropdown.nav-link.dropdown-toggle(href='#', role='button', data-toggle='dropdown', aria-haspopup='true', aria-expanded='false')
-              | Perfil
+              span#nombrePerfil
             .dropdown-menu(aria-labelledby='navbarDropdown')
               a.dropdown-item(href='#') Información
               a.dropdown-item(href='#') Pendientes
@@ -41,4 +48,58 @@ html(lang="en")
     script(src="/public/vendors/jquery/jquery-3.4.1.min.js")
     script(src="/public/vendors/bootstrap/js/bootstrap.min.js")
     script(src="/public/vendors/sweetalert2/dist/sweetalert2.all.min.js")
+    script.
+      if (getCookie("id")==="") {
+        window.location.href = "./login";
+      } else {
+        $("#nombrePerfil").html(getCookie("nombre"))
+
+        // validamos si es un administrador
+        if (getCookie("typeAcc")!=="2"){
+          $("#btnAdmin").hide();
+        }
+      }
+
+      function getCookie(cname) {
+        var name = cname + "=";
+        var decodedCookie = decodeURIComponent(document.cookie);
+        var ca = decodedCookie.split(';');
+        for(var i = 0; i <ca.length; i++) {
+          var c = ca[i];
+          while (c.charAt(0) == ' ') {
+            c = c.substring(1);
+          }
+          if (c.indexOf(name) == 0) {
+            return c.substring(name.length, c.length);
+          }
+        }
+        return "";
+      }
+
+      function tipoCuenta(val){
+        switch(val){
+          case 0:
+            return "Estandar";
+            break;
+          case 1:
+            return "Socio";
+            break;
+          case 2:
+            return "Administrador";
+            break;
+        }
+      }
+
+      function estatusACC(val){
+        switch(val){
+          case 0:
+            return "Inactivo";
+            break;
+          case 1:
+            return "Activo";
+            break;
+        }
+      }
+
+
     block extra_js

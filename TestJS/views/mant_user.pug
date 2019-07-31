@@ -1,0 +1,62 @@
+extends base.pug
+
+block content
+  form.js-form.col-12.col(style="text-align : center;margin-top:60px;")
+    .form-group.card
+      h1 Mantenimiento de Usuarios
+    .row(id="js_mant_user")
+
+block extra_js
+  script.
+    $(document).ready(function(){
+      //alert('Se ejecuta bien');
+      //$("#js_ofertas").empty();
+        
+        $.ajax({
+        data: {
+        },
+        url: './list_user',
+        method: 'POST',
+        
+        success: function(datos){
+          console.log(datos.user);
+          console.log(datos.user.length);
+          var i = 0;
+          $("#js_mant_user").hide();
+          while (i < datos.user.length){
+            console.log(datos.user[i]);
+
+            $("#js_mant_user").append(
+              `<div class="card col-12" style="position:static;">
+                <div class="row">
+                  <div class="col-2">
+                    <img class="img-card-css" src="images/${datos.user[i].usuario}.png" onerror="this.src='images/defaultuser.jpg'" style='margin-top:10px;'>
+                  </div>
+                  <div class="col-10">
+                    <h3 class="title-css">${datos.user[i].nombre}</h3>
+                    <div class="row">
+                    <h5 class="col-4" style="text-align:left;">Usuario:</h5><h5 style="text-align:left;" class="col-8">${datos.user[i].usuario}</h5>
+                    <h5 class="col-4" style="text-align:left;">Email:</h5><h5 style="text-align:left;" class="col-8">${datos.user[i].email}</h5>
+                    <h5 class="col-4" style="text-align:left;">Ident:</h5><h5 style="text-align:left;" class="col-8">${datos.user[i].ruc}</h5>
+                    <h5 class="col-4" style="text-align:left;">Tipo de cuenta:</h5><h5 style="text-align:left;" class="col-8">${tipoCuenta(datos.user[i].typeAcc)}</h5>
+                    <h5 class="col-4" style="text-align:left;">No. Usuario:</h5><h5 style="text-align:left;" class="col-8">${datos.user[i].id}</h5>
+                    <h5 class="col-4" style="text-align:left;">Estatus:</h5><h5 style="text-align:left;" class="col-8">${estatusACC(datos.user[i].estatus)}</h5>
+                  </div>
+                  <div class="row">
+                    <div class="col-6">
+                      <button class="btn btn-secondary btn-block" style="width:100%;">Editar
+                    </div>
+                    <div class="col-6">
+                      <button class="btn btn-danger btn-block" style="width:100%;">Eliminar
+                    </div>
+                  </div>
+                  <br>
+                </div>
+              </div>`
+            );
+            i++;
+          }
+          $("#js_mant_user").fadeIn(500);
+        }
+      });
+    });
