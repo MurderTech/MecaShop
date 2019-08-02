@@ -97,6 +97,26 @@ app.post('/logines', (req, res) => {
   });
 });
 
+app.post('/findUser', (req, res) => {
+  /*  PROCESO DE LOGIN*/
+    const filtro = req.body.clave;
+    console.log(filtro);
+    //usuario.find({ $and : [{id: filtro}, {usuario: filtro}, {ruc: filtro}, {nombre: filtro}, {email: filtro}]})
+    usuario.find({"id": filtro}, {"usuario": filtro}, {"ruc": filtro}, {"nombre": filtro}, {"email": filtro})
+    .exec((err, findUser) => {
+        if (err) {
+            res.status(400).json({
+                exito: false,
+                err
+            });
+        }
+        //console.log(`pase por login ${res.json}`);
+        res.json({
+          findUser,
+        });
+    });
+  });
+
 
 app.post('/registrar', (req, res) => {
   /* AQUI SE REGISTRAN LOS NUEVOS USUARIOS */

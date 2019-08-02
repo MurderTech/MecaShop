@@ -4,7 +4,12 @@ block content
   form.js-form.col-12.col(style="text-align : center;margin-top:60px;")
     .form-group.card
       h1 Mantenimiento de Usuarios
-    .row(id="js_mant_user")
+  .row
+    .col-8.col-sm-10.offset-sm-1.col-md-3.col-lg-3.ml-2
+      input#userToFind.form-control.ml-2(type='search', placeholder='Buscar...', aria-label='Search')
+    .col-2.col-sm-10.offset-sm-1.col-md-3.col-lg-3.ml-4
+      button#btnBuscarUser.btn.btn-success(type='submit') Buscar
+  .row.mt-3(id="js_mant_user")
 
 block extra_js
   script.
@@ -43,11 +48,11 @@ block extra_js
                     <h5 class="col-4" style="text-align:left; font-size:15px;">Estatus:</h5><h5 style="text-align:left; font-size:15px;" class="col-8">${estatusACC(datos.user[i].estatus)}</h5>
                   </div>
                   <div class="row" onmouseover="$(this).css('opacity','1.0');" onmouseleave="$(this).css('opacity','0.5');" style="height: 50px; opacity:0.5">
-                    <div class="col-6">
-                      <button class="btn btn-secondary btn-block" style="width:100%;">Editar
+                    <div class="col-4">
+                      <div class="btn btn-secondary btn-block" style="width:100%;" onclick="editUser('${datos.user[i].id}','${datos.user[i].nombre}')">Editar</div>
                     </div>
-                    <div class="col-6">
-                      <button class="btn btn-danger btn-block" style="width:100%;">Eliminar
+                    <div class="col-5">
+                      <div class="btn btn-danger btn-block" style="width:100%;" onclick="downUser('${datos.user[i].id}','${datos.user[i].nombre}')">Dar de baja</div>
                     </div>
                   </div>
                   <br>
@@ -57,6 +62,75 @@ block extra_js
             i++;
           }
           $("#js_mant_user").fadeIn(500);
+        }
+      });
+
+    });
+    function editUser(ID,NAME) {
+      alert(`Editar usuario ${ID}?`);
+    }
+
+    function downUser(ID,NAME){
+
+      const swalWithBootstrapButtons = Swal.mixin({
+        customClass: {
+          confirmButton: 'btn btn-success',
+          cancelButton: 'btn btn-danger'
+        },
+        buttonsStyling: false,
+      })
+
+      swalWithBootstrapButtons.fire({
+        title: `Dar de baja a ${NAME}?`,
+        text: 'Se anulara el inicio de sesion de este usuario.',
+        type: 'warning',
+        showCancelButton: true,
+        confirmButtonText: 'Confirmar',
+        cancelButtonText: 'Cancelar',
+        reverseButtons: true
+      }).then((result) => {
+        if (result.value) {
+          swalWithBootstrapButtons.fire(
+            'Deleted!',
+            'Your file has been deleted.',
+            'success'
+          )
+          
+
+        } else if (
+          // Read more about handling dismissals
+          result.dismiss === Swal.DismissReason.cancel
+        ) {
+          swalWithBootstrapButtons.fire(
+            'Cancelled',
+            'Your imaginary file is safe :)',
+            'error'
+          )
+        }
+      })
+    }
+
+    $('#btnBuscarUser').click(function(){
+      //alert($('#userToFind').val());
+      $.ajax({
+        data: {
+          clave: $("#userToFind").val(),
+        },
+        method: 'POST',
+        url: './findUser',
+        success: function(datos){
+          console.log(datos.findUser);
+          console.log(datos.findUser.length);
+
+          if (datos.findUser.length > 0) {
+            console.log(datos.findUser[0]);
+          } else {
+            Swal.fire(
+              'No se encontraron resultados',
+              'Intenta buscar a alguien más',
+              'warning'
+            );
+          }
         }
       });
     });
