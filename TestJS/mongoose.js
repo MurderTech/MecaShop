@@ -1,5 +1,7 @@
 const mongoose = require('mongoose');
 
+mongoose.set('useFindAndModify', false);
+
 const MONGO_URL = `mongodb://db:${process.env.MONGODB_PORT}/${process.env.MONGODB_DATABASE}`;
 
 const connectDb = () =>

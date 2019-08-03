@@ -98,17 +98,17 @@ app.post('/logines', (req, res) => {
 });
 
 app.post('/findUser', (req, res) => {
-  /*  PROCESO DE LOGIN*/
+  /*  PROCESO FILTRAR USUARIO*/
     const filtro = req.body.clave;
     let qry;
 
     if (isNaN(filtro)){
-      qry = { $or : [{"usuario": filtro}, {"ruc": filtro}, {"nombre": filtro}, {"email": filtro}]};
+      qry = { $or : [{"usuario": {$regex:'.*'+filtro+'.*'}}, {"ruc": {$regex:'.*'+filtro+'.*'}}, {"nombre": {$regex:'.*'+filtro+'.*'}}, {"email": {$regex:'.*'+filtro+'.*'}}]};
     } else {
-      qry = { $or : [{"id": filtro}, {"usuario": filtro}, {"ruc": filtro}, {"nombre": filtro}, {"email": filtro}]};
+      qry = { $or : [{"id": filtro}, {"usuario": {$regex:'.*'+filtro+'.*'}}, {"ruc": {$regex:'.*'+filtro+'.*'}}, {"nombre": {$regex:'.*'+filtro+'.*'}}, {"email": {$regex:'.*'+filtro+'.*'}}]};
     }
 
-    console.log(filtro);
+    //console.log(filtro);
     //usuario.find({ $and : [{id: filtro}, {usuario: filtro}, {ruc: filtro}, {nombre: filtro}, {email: filtro}]})
     usuario.find(qry)
     .exec(function (err,findUser) {
@@ -119,6 +119,52 @@ app.post('/findUser', (req, res) => {
         findUser,
       });
     });
+  });
+
+app.post('/findUserByID', (req, res) => {
+  /*  Buscar por ID*/
+    const filtro = req.body.clave;
+    let qry = filtro;
+
+    //console.log(filtro);
+    //usuario.find({ $and : [{id: filtro}, {usuario: filtro}, {ruc: filtro}, {nombre: filtro}, {email: filtro}]})
+    usuario.findById(qry, function(err, findUser){
+      if (err)
+        console.log(err);
+      
+      //console.log(findUser);  
+      res.json({
+        findUser,
+      });
+    })
+    //.exec(function (err,findUser) {
+    //});
+  });
+
+app.post('/UpdateUserByID', (req, res) => {
+  /*  Update User*/
+    const filtro = req.body.clave;
+
+    const nom = req.body.nombre;
+    const ema = req.body.email;
+    const Ruc = req.body.ruc;
+    const typ = req.body.typeAcc;
+    const est = req.body.estatus;
+
+    let qry = filtro;
+
+    //console.log(filtro);
+    //usuario.find({ $and : [{id: filtro}, {usuario: filtro}, {ruc: filtro}, {nombre: filtro}, {email: filtro}]})
+    usuario.findByIdAndUpdate(qry, {"nombre":nom, "email":ema, "ruc":Ruc, "typeAcc":typ, "estatus":est},
+      (err, updated) =>{
+      if (err)
+        return res.status(500).send({message:`error al instertar: ${err}`})
+      
+      //console.log(findUser);  
+      res.status(200).send({producto:updated})
+    })
+    //.exec(function (err,findUser) {
+    //});
   });
 
 
