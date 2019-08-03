@@ -38,6 +38,10 @@ app.get('/registro', (req, res) => {
 app.get('/musers', (req, res) => {
   res.render('mant_user.pug');
 });
+
+app.get('/mcupons', (req, res) => {
+  res.render('mant_cupons.pug');
+});
 //REDIRECCIONES
 
 
