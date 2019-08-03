@@ -119,18 +119,47 @@ block extra_js
         method: 'POST',
         url: './findUser',
         success: function(datos){
-          console.log(datos.findUser);
-          console.log(datos.findUser.length);
+          //console.log(datos.findUser);
+          //console.log(datos.findUser.length);
 
-          if (datos.findUser.length > 0) {
-            console.log(datos.findUser[0]);
-          } else {
-            Swal.fire(
-              'No se encontraron resultados',
-              'Intenta buscar a alguien más',
-              'warning'
+          var i = 0;
+          $("#js_mant_user").empty();
+          $("#js_mant_user").hide();
+          while (i < datos.findUser.length){
+          console.log(datos.findUser[i]);
+
+          $("#js_mant_user").append(
+            `<div class="card col-12 col-sm-12 col-md-6 col-lg-6" style="position:static;">
+              <div class="row">
+                <div class="col-2">
+                  <img class="img-card-css" src="images/${datos.findUser[i].usuario}.png" onerror="this.src='images/defaultuser.jpg'" style='margin-top:10px;'>
+                </div>
+                <div class="col-10">
+                  <h3 class="title-css">${datos.findUser[i].nombre}</h3>
+                  <div class="row">
+                  <h5 class="col-4" style="text-align:left; font-size:15px;">Usuario:</h5><h5 style="text-align:left; font-size:15px;" class="col-8">${datos.findUser[i].usuario}</h5>
+                  <h5 class="col-4" style="text-align:left; font-size:15px;">Email:</h5><h5 style="text-align:left; font-size:15px;" class="col-8">${datos.findUser[i].email}</h5>
+                  <h5 class="col-4" style="text-align:left; font-size:15px;">Ident:</h5><h5 style="text-align:left; font-size:15px;" class="col-8">${datos.findUser[i].ruc}</h5>
+                  <h5 class="col-4" style="text-align:left; font-size:15px;">Tipo de cuenta:</h5><h5 style="text-align:left; font-size:15px;" class="col-8">${tipoCuenta(datos.findUser[i].typeAcc)}</h5>
+                  <h5 class="col-4" style="text-align:left; font-size:15px;">No. Usuario:</h5><h5 style="text-align:left; font-size:15px;" class="col-8">${datos.findUser[i].id}</h5>
+                  <h5 class="col-4" style="text-align:left; font-size:15px;">Estatus:</h5><h5 style="text-align:left; font-size:15px;" class="col-8">${estatusACC(datos.findUser[i].estatus)}</h5>
+                </div>
+                <div class="row" onmouseover="$(this).css('opacity','1.0');" onmouseleave="$(this).css('opacity','0.5');" style="height: 50px; opacity:0.5">
+                  <div class="col-4">
+                    <div class="btn btn-secondary btn-block" style="width:100%;" onclick="editUser('${datos.findUser[i].id}','${datos.findUser[i].nombre}')">Editar</div>
+                  </div>
+                  <div class="col-5">
+                    <div class="btn btn-danger btn-block" style="width:100%;" onclick="downUser('${datos.findUser[i].id}','${datos.findUser[i].nombre}')">Dar de baja</div>
+                  </div>
+                </div>
+                <br>
+              </div>
+            </div>`
             );
+            i++;
           }
-        }
+        $("#js_mant_user").fadeIn(500);
+      }
+      
       });
     });

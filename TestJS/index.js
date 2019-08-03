@@ -100,20 +100,24 @@ app.post('/logines', (req, res) => {
 app.post('/findUser', (req, res) => {
   /*  PROCESO DE LOGIN*/
     const filtro = req.body.clave;
+    let qry;
+
+    if (isNaN(filtro)){
+      qry = { $or : [{"usuario": filtro}, {"ruc": filtro}, {"nombre": filtro}, {"email": filtro}]};
+    } else {
+      qry = { $or : [{"id": filtro}, {"usuario": filtro}, {"ruc": filtro}, {"nombre": filtro}, {"email": filtro}]};
+    }
+
     console.log(filtro);
     //usuario.find({ $and : [{id: filtro}, {usuario: filtro}, {ruc: filtro}, {nombre: filtro}, {email: filtro}]})
-    usuario.find({"id": filtro}, {"usuario": filtro}, {"ruc": filtro}, {"nombre": filtro}, {"email": filtro})
-    .exec((err, findUser) => {
-        if (err) {
-            res.status(400).json({
-                exito: false,
-                err
-            });
-        }
-        //console.log(`pase por login ${res.json}`);
-        res.json({
-          findUser,
-        });
+    usuario.find(qry)
+    .exec(function (err,findUser) {
+      if (err)
+        console.log(err);
+        
+      res.json({
+        findUser,
+      });
     });
   });
 
