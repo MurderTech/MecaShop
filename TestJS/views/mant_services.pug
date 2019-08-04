@@ -14,7 +14,7 @@ block content
       input#userToFind.form-control.ml-2(type='text', placeholder='Buscar...', autocomplete='off')
     .col-2.col-sm-10.offset-sm-1.col-md-3.col-lg-3.ml-4
       button#btnBuscarUser.btn.btn-success(type='submit') Buscar
-      button#btnNewService.btn.btn-success(type='submit') Nuevo
+      a(href="./registroservicio"): button#btnNewService.btn.btn-success(type='submit') Nuevo
   .row.mt-3(id="js_mant_services")
 
   #mySidenav.sidenav(style='width:0px;')
@@ -67,6 +67,10 @@ block extra_js
 
       openNav();
     }
+
+    $('#btnNewService').click(function(){
+
+    });
 
     $('#btnBuscarUser').click(function(){
       //alert($('#userToFind').val());

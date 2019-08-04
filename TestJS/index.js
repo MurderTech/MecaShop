@@ -47,7 +47,7 @@ app.get('/mservices', (req, res) => {
 
 app.get('/registroservicio', (req, res) => {
   res.render('registro_servicio.pug');
-  res.render('mant_service.pug');
+//  res.render('mant_service.pug');
 });
 
 app.get('/prestaserv', (req, res) => {
