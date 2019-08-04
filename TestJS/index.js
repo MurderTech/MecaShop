@@ -42,19 +42,16 @@ app.get('/musers', (req, res) => {
 });
 
 app.get('/mservices', (req, res) => {
-<<<<<<< HEAD
   res.render('mant_services.pug');
 });
 
 app.get('/registroservicio', (req, res) => {
   res.render('registro_servicio.pug');
-=======
   res.render('mant_service.pug');
 });
 
 app.get('/prestaserv', (req, res) => {
   res.render('prestaserv.pug');
->>>>>>> 60c818efd0ce0660f76aa96cf94b04d349c187a9
 });
 //REDIRECCIONES
 
