@@ -40,8 +40,12 @@ app.get('/musers', (req, res) => {
   res.render('mant_user.pug');
 });
 
-app.get('/mcupons', (req, res) => {
-  res.render('mant_cupons.pug');
+app.get('/mservices', (req, res) => {
+  res.render('mant_services.pug');
+});
+
+app.get('/registroservicio', (req, res) => {
+  res.render('registro_servicio.pug');
 });
 //REDIRECCIONES
 
@@ -198,6 +202,47 @@ app.post('/registrar', (req, res) => {
         usr.estatus = 1
 
         usr.save(function(err){
+          if (err) {
+            console.log('bad');
+            res.status(400).json({
+              exito: false,
+              err
+            });
+          }else{
+            console.log('fine');
+            res.status(200).json({
+              exito: true})
+          }
+        })
+      })
+    }
+
+    newID();
+    
+  });
+
+app.post('/registrar_servicio', (req, res) => {
+  /* AQUI SE REGISTRAN LOS NUEVOS SERVICIOS */
+    var srv = new servicio();
+
+    function newID(){
+      servicio.find().sort({id:-1}).limit(1)
+      .exec((err, maxsrv) => {
+        if (err) {
+          console.log(err);
+        }
+        if (maxsrv[0] !== undefined){
+          srv.id = maxsrv[0].id+1
+        } else {
+          srv.id = 0;
+        }
+        srv.title = req.body.title
+        srv.desc = req.body.desc
+
+        console.log(srv.title);
+        console.log(srv.desc);
+
+        srv.save(function(err){
           if (err) {
             console.log('bad');
             res.status(400).json({

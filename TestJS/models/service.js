@@ -12,7 +12,7 @@ const categorieShema = new Schema({
     },
     desc: {
         type: String,
-    }
+    },
 
 });
 

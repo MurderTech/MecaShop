@@ -1,0 +1,231 @@
+extends base.pug
+
+block content
+  .toast.jam(aria-hidden='true')
+    span.close(aria-role='button', tabindex='0') ×
+    |   Lightly toasted with jam.
+
+  #capa.capaNone(onclick='closeNav()')
+  form.js-form.col-12.col(style="text-align : center;margin-top:60px;")
+    .form-group.card
+      h1 Mantenimiento de Servicios
+  .row
+    .col-8.col-sm-10.offset-sm-1.col-md-3.col-lg-3.ml-2
+      input#userToFind.form-control.ml-2(type='text', placeholder='Buscar...', autocomplete='off')
+    .col-2.col-sm-10.offset-sm-1.col-md-3.col-lg-3.ml-4
+      button#btnBuscarUser.btn.btn-success(type='submit') Buscar
+      button#btnNewService.btn.btn-success(type='submit') Nuevo
+  .row.mt-3(id="js_mant_services")
+
+  #mySidenav.sidenav(style='width:0px;')
+    a.closebtn(href='javascript:void(0)', onclick='closeNav()') ×
+    
+    .form-group.ml-3.mr-3.text-white.js-form-slide
+      h3.col-12.col-centered#lblEdit Editar datos
+      
+      .row
+        .col-4.col-sm-4.col-md-2.col-lg-1.mt-3
+          label(style='font-size:20px;') Titulo:
+        .col-8.col-sm-8.col-md-4.col-lg-3.mt-3
+          input.js-user-value.form-control(type="text", style="text-align:center;" id="edTitulo")
+
+        .col-4.col-sm-4.col-md-2.col-lg-1.mt-3
+          label(style='font-size:20px;') Descripcion:
+        .col-8.col-sm-8.col-md-4.col-lg-3.mt-3
+          input.js-pass-value.form-control(type="text", style="text-align:center;" id="edDescripcion")
+          
+      .row.mt-5    
+        button.btn.btn-success.btn-block.mt-3.col-4.offset-4(type="button", style="margin-bottom:15px;" id="btnGuardarEd") Guardar
+        input#idHidden(type='hidden' value="")
+
+
+block extra_js
+  script.
+    $(document).ready(function(){
+      cargarDatos();
+    });
+    function editUser(ID,NAME) {
+      //alert(`Editar usuario ${ID}?`);
+      $.ajax({
+        data: {
+          clave: ID,
+        },
+        method: 'POST',
+        url: './findUserByID',
+        success: function(datos){
+          console.log(datos.findUser)
+          $('#lblEdit').html(`Editar datos de <br>${datos.findUser.usuario}`)
+          $('#edNombre').val(`${datos.findUser.nombre}`)
+          $('#edEmail').val(`${datos.findUser.email}`)
+          $('#edRuc').val(`${datos.findUser.ruc}`)
+          $('#cbxTipo').val(`${datos.findUser.typeAcc}`)
+          $('#cbxEstatus').val(`${datos.findUser.estatus}`)
+          $('#idHidden').val(`${datos.findUser._id}`)
+        }
+        
+      });
+
+      openNav();
+    }
+
+    $('#btnBuscarUser').click(function(){
+      //alert($('#userToFind').val());
+      $.ajax({
+        data: {
+          clave: $("#userToFind").val(),
+        },
+        method: 'POST',
+        url: './findUser',
+        success: function(datos){
+          //console.log(datos.findUser);
+          //console.log(datos.findUser.length);
+          if (datos.findUser.length > 0) {
+           
+            var i = 0;
+            $("#js_mant_user").empty();
+            $("#js_mant_user").hide();
+            while (i < datos.findUser.length){
+            console.log(datos.findUser[i]);
+
+            $("#js_mant_user").append(
+              `<div class="card col-12 col-sm-12 col-md-6 col-lg-6" style="position:static;">
+                <div class="row">
+                  <div class="col-2">
+                    <img class="img-card-css" src="images/${datos.findUser[i].usuario}.png" onerror="this.src='images/defaultuser.jpg'" style='margin-top:10px;'>
+                  </div>
+                  <div class="col-10">
+                    <h3 class="title-css">${datos.findUser[i].nombre}</h3>
+                    <div class="row">
+                    <h5 class="col-4" style="text-align:left; font-size:15px;">Usuario:</h5><h5 style="text-align:left; font-size:15px;" class="col-8">${datos.findUser[i].usuario}</h5>
+                    <h5 class="col-4" style="text-align:left; font-size:15px;">Email:</h5><h5 style="text-align:left; font-size:15px;" class="col-8">${datos.findUser[i].email}</h5>
+                    <h5 class="col-4" style="text-align:left; font-size:15px;">Ident:</h5><h5 style="text-align:left; font-size:15px;" class="col-8">${datos.findUser[i].ruc}</h5>
+                    <h5 class="col-4" style="text-align:left; font-size:15px;">Tipo de cuenta:</h5><h5 style="text-align:left; font-size:15px;" class="col-8">${tipoCuenta(datos.findUser[i].typeAcc)}</h5>
+                    <h5 class="col-4" style="text-align:left; font-size:15px;">No. Usuario:</h5><h5 style="text-align:left; font-size:15px;" class="col-8">${datos.findUser[i].id}</h5>
+                    <h5 class="col-4" style="text-align:left; font-size:15px;">Estatus:</h5><h5 style="text-align:left; font-size:15px;" class="col-8">${estatusACC(datos.findUser[i].estatus)}</h5>
+                  </div>
+                  <div class="row" onmouseover="$(this).css('opacity','1.0');" onmouseleave="$(this).css('opacity','0.5');" style="height: 50px; opacity:0.5">
+                    <div class="col-4">
+                      <div class="btn btn-secondary btn-block" style="width:100%;" onclick="editUser('${datos.findUser[i]._id}','${datos.findUser[i].nombre}')">Editar</div>
+                    </div>
+                  </div>
+                  <br>
+                </div>
+              </div>`
+              );
+              i++;
+            }
+          $("#js_mant_user").fadeIn(500);
+        } else {
+          Swal.fire(
+            'Sin resultados',
+            'Intenta con otro usuario',
+            'error'
+          );
+        }
+      }
+      
+      });
+    });
+
+    $('#btnGuardarEd').click(function(){
+      //findAndUpdate
+      $.ajax({
+        data: {
+          clave: $('#idHidden').val(),
+          nombre: $('#edNombre').val(),
+          email: $('#edEmail').val(),
+          ruc: $('#edRuc').val(),
+          typeAcc: $('#cbxTipo').val(),
+          estatus: $('#cbxEstatus').val(),
+        },
+        method: 'POST',
+        url: './UpdateUserByID',
+        success: function(datos){
+          Swal.fire({
+            position: 'top',
+            type: 'success',
+            title: 'Usuario modificado con exito',
+            showConfirmButton: false,
+            timer: 1500
+          })
+          closeNav();
+          cargarDatos();
+        }
+        
+      });
+    });
+
+    function openNav() {
+      if (document.getElementById("mySidenav").style.width == "0px"){
+        $('.js-form-slide').hide();
+        $('#capa').fadeIn('slow');
+        document.getElementById("capa").className = "capaBlock";
+        document.getElementById("mySidenav").style.width = `90%`;
+        $('.js-form-slide').fadeIn(1000);
+      } else {
+        $('.js-form-slide').fadeOut(100);
+        $('#capa').fadeOut('slow');
+        document.getElementById("capa").className = "capaNone";
+        document.getElementById("mySidenav").style.width = "0px";
+      }
+          
+    }
+
+    function closeNav() {
+      $('.js-form-slide').fadeOut(100);
+      $('#capa').fadeOut('slow');
+      document.getElementById("capa").className = "capaNone";
+      document.getElementById("mySidenav").style.width = "0px";
+    }
+
+    function cargarDatos(){
+      clave: $("#userToFind").val('');
+
+      $("#js_mant_user").empty();
+      $("#js_mant_user").hide();
+        
+      $.ajax({
+        data: {
+        },
+        url: './list_user',
+        method: 'POST',
+        
+        success: function(datos){
+          console.log(datos.user);
+          console.log(datos.user.length);
+          var i = 0;
+          $("#js_mant_user").hide();
+          while (i < datos.user.length){
+            console.log(datos.user[i]);
+
+            $("#js_mant_user").append(
+              `<div class="card col-12 col-sm-12 col-md-6 col-lg-6" style="position:static;">
+                <div class="row">
+                  <div class="col-2">
+                    <img class="img-card-css" src="images/${datos.user[i].usuario}.png" onerror="this.src='images/defaultuser.jpg'" style='margin-top:10px;'>
+                  </div>
+                  <div class="col-10">
+                    <h3 class="title-css">${datos.user[i].nombre}</h3>
+                    <div class="row">
+                    <h5 class="col-4" style="text-align:left; font-size:15px;">Usuario:</h5><h5 style="text-align:left; font-size:15px;" class="col-8">${datos.user[i].usuario}</h5>
+                    <h5 class="col-4" style="text-align:left; font-size:15px;">Email:</h5><h5 style="text-align:left; font-size:15px;" class="col-8">${datos.user[i].email}</h5>
+                    <h5 class="col-4" style="text-align:left; font-size:15px;">Ident:</h5><h5 style="text-align:left; font-size:15px;" class="col-8">${datos.user[i].ruc}</h5>
+                    <h5 class="col-4" style="text-align:left; font-size:15px;">Tipo de cuenta:</h5><h5 style="text-align:left; font-size:15px;" class="col-8">${tipoCuenta(datos.user[i].typeAcc)}</h5>
+                    <h5 class="col-4" style="text-align:left; font-size:15px;">No. Usuario:</h5><h5 style="text-align:left; font-size:15px;" class="col-8">${datos.user[i].id}</h5>
+                    <h5 class="col-4" style="text-align:left; font-size:15px;">Estatus:</h5><h5 style="text-align:left; font-size:15px;" class="col-8">${estatusACC(datos.user[i].estatus)}</h5>
+                  </div>
+                  <div class="row" onmouseover="$(this).css('opacity','1.0');" onmouseleave="$(this).css('opacity','0.5');" style="height: 50px; opacity:0.5">
+                    <div class="col-4">
+                      <div class="btn btn-secondary btn-block" style="width:100%;" onclick="editUser('${datos.user[i]._id}','${datos.user[i].nombre}')">Editar</div>
+                    </div>
+                  </div>
+                  <br>
+                </div>
+              </div>`
+            );
+            i++;
+          }
+          $("#js_mant_user").fadeIn(500);
+        }
+      });
+    }
