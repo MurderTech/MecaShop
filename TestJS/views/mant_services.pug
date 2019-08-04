@@ -8,14 +8,14 @@ block content
   #capa.capaNone(onclick='closeNav()')
   form.js-form.col-12.col(style="text-align : center;margin-top:60px;")
     .form-group.card
-      h1 Mantenimiento de Usuarios
+      h1 Mantenimiento de Servicios
   .row
     .col-8.col-sm-10.offset-sm-1.col-md-3.col-lg-3.ml-2
       input#userToFind.form-control.ml-2(type='text', placeholder='Buscar...', autocomplete='off')
     .col-2.col-sm-10.offset-sm-1.col-md-3.col-lg-3.ml-4
       button#btnBuscarUser.btn.btn-success(type='submit') Buscar
-      a(href="./registro"): button#btnBuscarUser.btn.btn-success(type='submit') Nuevo
-  .row.mt-3(id="js_mant_user")
+      a(href="./registroservicio"): button#btnNewService.btn.btn-success(type='submit') Nuevo
+  .row.mt-3(id="js_mant_services")
 
   #mySidenav.sidenav(style='width:0px;')
     a.closebtn(href='javascript:void(0)', onclick='closeNav()') ×
@@ -25,35 +25,14 @@ block content
       
       .row
         .col-4.col-sm-4.col-md-2.col-lg-1.mt-3
-          label(style='font-size:20px;') Nombre:
+          label(style='font-size:20px;') Titulo:
         .col-8.col-sm-8.col-md-4.col-lg-3.mt-3
-          input.js-user-value.form-control(type="text", style="text-align:center;" id="edNombre")
+          input.js-user-value.form-control(type="text", style="text-align:center;" id="edTitulo")
 
         .col-4.col-sm-4.col-md-2.col-lg-1.mt-3
-          label(style='font-size:20px;') Correo:
+          label(style='font-size:20px;') Descripcion:
         .col-8.col-sm-8.col-md-4.col-lg-3.mt-3
-          input.js-pass-value.form-control(type="text", style="text-align:center;" id="edEmail")
-
-        .col-4.col-sm-4.col-md-2.col-lg-1.mt-3
-          label(style='font-size:20px;') Ident:
-        .col-8.col-sm-8.col-md-4.col-lg-3.mt-3
-          input.js-pass-value.form-control(type="text", style="text-align:center;" id="edRuc")
-
-      .row
-        .col-4.col-sm-4.col-md-2.col-lg-1.mt-3
-          label(style='font-size:20px;') Tipo:
-        .col-8.col-sm-8.col-md-4.col-lg-3.mt-3
-          select.js-typeacc-value.form-control(id="cbxTipo")
-            option(value='0') Estandar
-            option(value='1') Socio
-            option(value='2') Administrador
-
-        .col-4.col-sm-4.col-md-2.col-lg-1.mt-3
-          label(style='font-size:20px;') Estatus:
-        .col-8.col-sm-8.col-md-4.col-lg-3.mt-3
-          select.js-typeacc-value.form-control(id="cbxEstatus")
-            option(value='0') Inactivo
-            option(value='1') Activo
+          input.js-pass-value.form-control(type="text", style="text-align:center;" id="edDescripcion")
           
       .row.mt-5    
         button.btn.btn-success.btn-block.mt-3.col-4.offset-4(type="button", style="margin-bottom:15px;" id="btnGuardarEd") Guardar
@@ -88,6 +67,10 @@ block extra_js
 
       openNav();
     }
+
+    $('#btnNewService').click(function(){
+
+    });
 
     $('#btnBuscarUser').click(function(){
       //alert($('#userToFind').val());
