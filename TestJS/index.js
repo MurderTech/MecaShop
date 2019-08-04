@@ -4,7 +4,8 @@ const bodyParser = require('body-parser');
 const express = require('express');
 const cupon = require('./models/cupon');
 const usuario = require('./models/usuario');
-const servicio = require('./models/service')
+const servicio = require('./models/service');
+const servxuser = require('./models/servxuser')
 const { connectDb } = require('./mongoose');
 const { test } = require('./utils');
 const app = express();
@@ -41,17 +42,25 @@ app.get('/musers', (req, res) => {
 });
 
 app.get('/mservices', (req, res) => {
+<<<<<<< HEAD
   res.render('mant_services.pug');
 });
 
 app.get('/registroservicio', (req, res) => {
   res.render('registro_servicio.pug');
+=======
+  res.render('mant_service.pug');
+});
+
+app.get('/prestaserv', (req, res) => {
+  res.render('prestaserv.pug');
+>>>>>>> 60c818efd0ce0660f76aa96cf94b04d349c187a9
 });
 //REDIRECCIONES
 
 
 //PETICIONES
-app.post('/cupones', (req, res) => {
+app.post('/services', (req, res) => {
   //const { project } = req.body;
   servicio.find({})
   .exec((err, service) => {
@@ -65,6 +74,43 @@ app.post('/cupones', (req, res) => {
       res.json({
           service,
       });
+  });
+});
+
+app.post('/servxuser', (req, res) => {
+  let idserv = req.body.ids;
+  //console.log(idserv);
+
+  let qry = {"idServ":idserv};
+
+  servxuser.find(qry,"idUser")
+  .exec(function (err,servxuser) {
+    if (err)
+      console.log(err);
+    //console.log(servxuser[0].idUser);
+    let i = 0;
+    let filtro = '';
+    if (servxuser.length > 0){
+      while (i < servxuser.length){
+        filtro = filtro + ',' + servxuser[0].idUser;
+  
+        i++;
+      }
+      filtro = filtro.substring(1, 999);
+  
+      let filtroJSON = JSON.parse("["+filtro+"]")
+  
+      usuario.find({"id": {$in: filtroJSON}})
+      .exec(function (err,servxuserF){
+        //console.log(servxuserF);
+        res.json({
+          servxuserF,
+        });
+      })
+    } else {
+      res.json({message:'No hay usuarios brindando este servicio en este momento'});
+    }
+    
   });
 });
 
