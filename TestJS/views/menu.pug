@@ -15,7 +15,7 @@ block extra_js
         $.ajax({
         data: {
         },
-        url: './cupones',
+        url: './services',
         method: 'POST',
         
         success: function(datos){
@@ -28,7 +28,7 @@ block extra_js
             $("#js_ofertas").append(
               `<div class="col-12 col-sm-12 col-md-6 col-lg-4">
                 <div class="menu-item-css" style="background-image:url(images/service/${datos.service[i].title}.jpg);">
-                  <div class="row">
+                  <div class="row" onclick="viewServices('${datos.service[i].id}')">
                       <div class="col-8 offset-2 mt-5 mb-5 cardinfo-css card">
                         <h4 class="title-css">${datos.service[i].title}</h4>
                         <h5>${datos.service[i].desc}</h5>
@@ -43,4 +43,26 @@ block extra_js
         }
       });
     });
+
+    function viewServices(idServ){
+      localStorage.setItem("idServ", idServ);
+
+      window.location.href = "./prestaserv";
+      //alert(idServ);
+      /*$.ajax({
+        data: {
+          ids: idServ,
+        },
+        url: './servxuser',
+        method: 'POST',
+
+        success: function(datos){
+          console.log(datos.servxuserF);
+
+          if (datos.servxuserF !== undefined){
+            
+          }
+        }
+      })*/
+    }
     

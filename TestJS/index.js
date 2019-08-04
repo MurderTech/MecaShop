@@ -4,7 +4,8 @@ const bodyParser = require('body-parser');
 const express = require('express');
 const cupon = require('./models/cupon');
 const usuario = require('./models/usuario');
-const servicio = require('./models/service')
+const servicio = require('./models/service');
+const servxuser = require('./models/servxuser')
 const { connectDb } = require('./mongoose');
 const { test } = require('./utils');
 const app = express();
@@ -40,14 +41,18 @@ app.get('/musers', (req, res) => {
   res.render('mant_user.pug');
 });
 
-app.get('/mcupons', (req, res) => {
-  res.render('mant_cupons.pug');
+app.get('/mservices', (req, res) => {
+  res.render('mant_service.pug');
+});
+
+app.get('/prestaserv', (req, res) => {
+  res.render('prestaserv.pug');
 });
 //REDIRECCIONES
 
 
 //PETICIONES
-app.post('/cupones', (req, res) => {
+app.post('/services', (req, res) => {
   //const { project } = req.body;
   servicio.find({})
   .exec((err, service) => {
@@ -61,6 +66,43 @@ app.post('/cupones', (req, res) => {
       res.json({
           service,
       });
+  });
+});
+
+app.post('/servxuser', (req, res) => {
+  let idserv = req.body.ids;
+  //console.log(idserv);
+
+  let qry = {"idServ":idserv};
+
+  servxuser.find(qry,"idUser")
+  .exec(function (err,servxuser) {
+    if (err)
+      console.log(err);
+    //console.log(servxuser[0].idUser);
+    let i = 0;
+    let filtro = '';
+    if (servxuser.length > 0){
+      while (i < servxuser.length){
+        filtro = filtro + ',' + servxuser[0].idUser;
+  
+        i++;
+      }
+      filtro = filtro.substring(1, 999);
+  
+      let filtroJSON = JSON.parse("["+filtro+"]")
+  
+      usuario.find({"id": {$in: filtroJSON}})
+      .exec(function (err,servxuserF){
+        //console.log(servxuserF);
+        res.json({
+          servxuserF,
+        });
+      })
+    } else {
+      res.json({message:'No hay usuarios brindando este servicio en este momento'});
+    }
+    
   });
 });
 

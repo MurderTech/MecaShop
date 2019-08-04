@@ -1,0 +1,25 @@
+extends base.pug
+
+block content
+  form.js-form.col-12.col(style="text-align : center;margin-top:60px;")
+    .form-group.card
+      h1 Mira, estos pueden realizar lo que buscas:
+    .row(id="js_ofertas")
+
+block extra_js
+  script.
+    $(document).ready(function(){
+      $.ajax({
+        data: {
+          ids: localStorage.getItem("idServ"),
+        },
+        url: './servxuser',
+        method: 'POST',
+
+        success: function(datos){
+          if (datos.servxuserF !== undefined){
+            console.log(datos.servxuserF);
+          }
+        }
+      })
+    });
