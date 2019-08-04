@@ -4,6 +4,7 @@ const bodyParser = require('body-parser');
 const express = require('express');
 const cupon = require('./models/cupon');
 const usuario = require('./models/usuario');
+const servicio = require('./models/service')
 const { connectDb } = require('./mongoose');
 const { test } = require('./utils');
 const app = express();
@@ -48,8 +49,8 @@ app.get('/mcupons', (req, res) => {
 //PETICIONES
 app.post('/cupones', (req, res) => {
   //const { project } = req.body;
-  cupon.find({})
-  .exec((err, cupones) => {
+  servicio.find({})
+  .exec((err, service) => {
       if (err) {
           res.status(400).json({
               exito: false,
@@ -58,7 +59,7 @@ app.post('/cupones', (req, res) => {
       }
       //console.log(`pase por cupones ${res.json}`);
       res.json({
-          cupones,
+          service,
       });
   });
 });

@@ -2,10 +2,8 @@ extends base.pug
 
 block content
   form.js-form.col-12.col(style="text-align : center;margin-top:60px;")
-    span.text-muted
-      strong ¡Hola! ¿Cómo puedo ayudarte?
     .form-group.card
-      h1 ¡Mira estas ofertas!
+      h1 Nuestros Servicios
     .row(id="js_ofertas")
 
 block extra_js
@@ -21,26 +19,20 @@ block extra_js
         method: 'POST',
         
         success: function(datos){
-          console.log(datos.cupones);
-          console.log(datos.cupones.length);
+          console.log(datos.service);
+          console.log(datos.service.length);
           var i = 0;
           $("#js_ofertas").hide();
-          while (i < datos.cupones.length){
-            console.log(datos.cupones[i]);
+          while (i < datos.service.length){
+            console.log(datos.service[i]);
             $("#js_ofertas").append(
-              `<div class="card col-12 col-sm-12 col-md-6 col-lg-4 cardinfo-css" style="position:static;">
-                <div class="row">
-                  <div class="col-4">
-                    <img class="img-card-css" src="images/${datos.cupones[i].imagen}">
-                  </div>
-                    <div class="col-8">
-                      <h3 class="title-css">${datos.cupones[i].title}</h3>
-                      <h5>${datos.cupones[i].desc}</h5>
-                    </div>
-                  </div>
+              `<div class="col-12 col-sm-12 col-md-6 col-lg-4">
+                <div class="menu-item-css" style="background-image:url(images/service/${datos.service[i].title}.jpg);">
                   <div class="row">
-                    <div class="col-12">
-                      <p class="text-muted" style="font-size : 10px">${datos.cupones[i].param}</p>
+                      <div class="col-8 offset-2 mt-5 mb-5 cardinfo-css card">
+                        <h4 class="title-css">${datos.service[i].title}</h4>
+                        <h5>${datos.service[i].desc}</h5>
+                      </div>
                     </div>
                   </div>
                 </div>`
