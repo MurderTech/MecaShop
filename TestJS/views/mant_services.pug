@@ -54,7 +54,7 @@ block extra_js
         url: './findServiceByID',
         success: function(datos){
           console.log(datos.findService)
-          $('#lblEdit').html(`Editar datos de <br>${datos.findService.Titulo}`)
+          $('#lblEdit').html(`Editar datos de <br>${datos.findService.title}`)
           $('#edTitulo').val(`${datos.findService.title}`)
           $('#edDescripcion').val(`${datos.findService.desc}`)
           $('#idHidden').val(`${datos.findService._id}`)
@@ -84,7 +84,7 @@ block extra_js
             $("#js_mant_services").empty();
             $("#js_mant_services").hide();
             while (i < datos.findService.length){
-            console.log(datos.findService[i]);
+            //console.log(datos.findService[i]);
 
             $("#js_mant_user").append(
               `<div class="card col-12 col-sm-12 col-md-6 col-lg-6" style="position:static;">

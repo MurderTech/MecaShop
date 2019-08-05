@@ -191,6 +191,23 @@ app.post('/findUser', (req, res) => {
 
 app.post('/findService', (req, res) => {
   const filtro = req.body.clave;
+  let qry;
+  
+  if (isNaN(filtro)){
+    qry = { $or : [{"title": {$regex:'.*'+filtro+'.*'}}, {"desc": {$regex:'.*'+filtro+'.*'}}]};
+  } else {
+    qry = { $or : [{"id": filtro}, {"title": {$regex:'.*'+filtro+'.*'}}, {"desc": {$regex:'.*'+filtro+'.*'}}]};
+  }
+
+  servicio.find(qry)
+  .exec(function (err,findService){
+    if (err)
+      console.log(err);
+    
+    res.json({
+      findService,
+    });
+  });
 });
 
 app.post('/findUserByID', (req, res) => {
@@ -212,6 +229,20 @@ app.post('/findUserByID', (req, res) => {
     //.exec(function (err,findUser) {
     //});
   });
+
+app.post('/findServiceByID', (req, res) => {
+  const filtro = req.body.clave;
+  let qry = filtro;
+
+  servicio.findById(qry, function(err,findService){
+    if (err)
+      console.log(err);
+    
+    res.json({
+      findService,
+    });
+  })
+});
 
 app.post('/UpdateUserByID', (req, res) => {
   /*  Update User*/
@@ -250,7 +281,7 @@ app.post('/UpdateUserByID', (req, res) => {
   
       //console.log(filtro);
       //usuario.find({ $and : [{id: filtro}, {usuario: filtro}, {ruc: filtro}, {nombre: filtro}, {email: filtro}]})
-      usuario.findByIdAndUpdate(qry, {"title":title, "desc":desc},
+      servicio.findByIdAndUpdate(qry, {"title":title, "desc":desc},
         (err, updated) =>{
         if (err)
           return res.status(500).send({message:`error al actualizar servicio: ${err}`})
