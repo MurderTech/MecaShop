@@ -44,23 +44,20 @@ block extra_js
     $(document).ready(function(){
       cargarDatos();
     });
-    function editUser(ID,NAME) {
+    function editService(ID,NAME) {
       //alert(`Editar usuario ${ID}?`);
       $.ajax({
         data: {
           clave: ID,
         },
         method: 'POST',
-        url: './findUserByID',
+        url: './findServiceByID',
         success: function(datos){
-          console.log(datos.findUser)
-          $('#lblEdit').html(`Editar datos de <br>${datos.findUser.usuario}`)
-          $('#edNombre').val(`${datos.findUser.nombre}`)
-          $('#edEmail').val(`${datos.findUser.email}`)
-          $('#edRuc').val(`${datos.findUser.ruc}`)
-          $('#cbxTipo').val(`${datos.findUser.typeAcc}`)
-          $('#cbxEstatus').val(`${datos.findUser.estatus}`)
-          $('#idHidden').val(`${datos.findUser._id}`)
+          console.log(datos.findService)
+          $('#lblEdit').html(`Editar datos de <br>${datos.findService.title}`)
+          $('#edTitulo').val(`${datos.findService.title}`)
+          $('#edDescripcion').val(`${datos.findService.desc}`)
+          $('#idHidden').val(`${datos.findService._id}`)
         }
         
       });
@@ -68,48 +65,42 @@ block extra_js
       openNav();
     }
 
-    $('#btnNewService').click(function(){
-
-    });
-
-    $('#btnBuscarUser').click(function(){
+    $('#btnBuscarService').click(function(){
       //alert($('#userToFind').val());
       $.ajax({
         data: {
-          clave: $("#userToFind").val(),
+          clave: $("#serviceToFind").val(),
+          title: $("#edTitulo").val(),
+          desc: $("#edDescripcion").val(),
         },
         method: 'POST',
-        url: './findUser',
+        url: './findService',
         success: function(datos){
           //console.log(datos.findUser);
           //console.log(datos.findUser.length);
-          if (datos.findUser.length > 0) {
+          if (datos.findService.length > 0) {
            
             var i = 0;
-            $("#js_mant_user").empty();
-            $("#js_mant_user").hide();
-            while (i < datos.findUser.length){
-            console.log(datos.findUser[i]);
+            $("#js_mant_services").empty();
+            $("#js_mant_services").hide();
+            while (i < datos.findService.length){
+            //console.log(datos.findService[i]);
 
             $("#js_mant_user").append(
               `<div class="card col-12 col-sm-12 col-md-6 col-lg-6" style="position:static;">
                 <div class="row">
                   <div class="col-2">
-                    <img class="img-card-css" src="images/${datos.findUser[i].usuario}.png" onerror="this.src='images/defaultuser.jpg'" style='margin-top:10px;'>
+                    <img class="img-card-css" src="images/service/${datos.findService[i].title}.png" onerror="this.src='images/service/default.jpg'" style='margin-top:10px;'>
                   </div>
                   <div class="col-10">
-                    <h3 class="title-css">${datos.findUser[i].nombre}</h3>
+                    <h3 class="title-css">${datos.findService[i].title}</h3>
                     <div class="row">
-                    <h5 class="col-4" style="text-align:left; font-size:15px;">Usuario:</h5><h5 style="text-align:left; font-size:15px;" class="col-8">${datos.findUser[i].usuario}</h5>
-                    <h5 class="col-4" style="text-align:left; font-size:15px;">Email:</h5><h5 style="text-align:left; font-size:15px;" class="col-8">${datos.findUser[i].email}</h5>
-                    <h5 class="col-4" style="text-align:left; font-size:15px;">Ident:</h5><h5 style="text-align:left; font-size:15px;" class="col-8">${datos.findUser[i].ruc}</h5>
-                    <h5 class="col-4" style="text-align:left; font-size:15px;">Tipo de cuenta:</h5><h5 style="text-align:left; font-size:15px;" class="col-8">${tipoCuenta(datos.findUser[i].typeAcc)}</h5>
-                    <h5 class="col-4" style="text-align:left; font-size:15px;">No. Usuario:</h5><h5 style="text-align:left; font-size:15px;" class="col-8">${datos.findUser[i].id}</h5>
-                    <h5 class="col-4" style="text-align:left; font-size:15px;">Estatus:</h5><h5 style="text-align:left; font-size:15px;" class="col-8">${estatusACC(datos.findUser[i].estatus)}</h5>
+                    <h5 class="col-4" style="text-align:left; font-size:15px;">Usuario:</h5><h5 style="text-align:left; font-size:15px;" class="col-8">${datos.findService[i].title}</h5>
+                    <h5 class="col-4" style="text-align:left; font-size:15px;">Email:</h5><h5 style="text-align:left; font-size:15px;" class="col-8">${datos.findService[i].desc}</h5>
                   </div>
                   <div class="row" onmouseover="$(this).css('opacity','1.0');" onmouseleave="$(this).css('opacity','0.5');" style="height: 50px; opacity:0.5">
                     <div class="col-4">
-                      <div class="btn btn-secondary btn-block" style="width:100%;" onclick="editUser('${datos.findUser[i]._id}','${datos.findUser[i].nombre}')">Editar</div>
+                      <div class="btn btn-secondary btn-block" style="width:100%;" onclick="editUser('${datos.findService[i]._id}','${datos.findService[i].title}')">Editar</div>
                     </div>
                   </div>
                   <br>
@@ -118,11 +109,11 @@ block extra_js
               );
               i++;
             }
-          $("#js_mant_user").fadeIn(500);
+          $("#js_mant_services").fadeIn(500);
         } else {
           Swal.fire(
             'Sin resultados',
-            'Intenta con otro usuario',
+            'Intenta con otro servicio',
             'error'
           );
         }
@@ -136,19 +127,16 @@ block extra_js
       $.ajax({
         data: {
           clave: $('#idHidden').val(),
-          nombre: $('#edNombre').val(),
-          email: $('#edEmail').val(),
-          ruc: $('#edRuc').val(),
-          typeAcc: $('#cbxTipo').val(),
-          estatus: $('#cbxEstatus').val(),
+          title: $('#edTitulo').val(),
+          desc: $('#edDescripcion').val(),
         },
         method: 'POST',
-        url: './UpdateUserByID',
+        url: './UpdateServiceByID',
         success: function(datos){
           Swal.fire({
             position: 'top',
             type: 'success',
-            title: 'Usuario modificado con exito',
+            title: 'Servicio modificado con exito',
             showConfirmButton: false,
             timer: 1500
           })
@@ -172,7 +160,6 @@ block extra_js
         document.getElementById("capa").className = "capaNone";
         document.getElementById("mySidenav").style.width = "0px";
       }
-          
     }
 
     function closeNav() {
@@ -183,44 +170,41 @@ block extra_js
     }
 
     function cargarDatos(){
-      clave: $("#userToFind").val('');
+      clave: $("#serviceToFind").val('');
 
-      $("#js_mant_user").empty();
-      $("#js_mant_user").hide();
+      $("#js_mant_services").empty();
+      $("#js_mant_services").hide();
         
       $.ajax({
         data: {
         },
-        url: './list_user',
+        url: './list_service',
         method: 'POST',
         
         success: function(datos){
-          console.log(datos.user);
-          console.log(datos.user.length);
+          console.log(datos.service);
+          console.log(datos.service.length);
           var i = 0;
-          $("#js_mant_user").hide();
-          while (i < datos.user.length){
-            console.log(datos.user[i]);
+          $("#js_mant_services").hide();
+          while (i < datos.service.length){
+            console.log(datos.service[i]);
 
-            $("#js_mant_user").append(
+            $("#js_mant_services").append(
               `<div class="card col-12 col-sm-12 col-md-6 col-lg-6" style="position:static;">
                 <div class="row">
                   <div class="col-2">
-                    <img class="img-card-css" src="images/${datos.user[i].usuario}.png" onerror="this.src='images/defaultuser.jpg'" style='margin-top:10px;'>
+                    <img class="img-card-css" src="images/service/${datos.service[i].title}.jpg" onerror="this.src='images/service/default.jpg'" style='margin-top:10px;'>
                   </div>
                   <div class="col-10">
-                    <h3 class="title-css">${datos.user[i].nombre}</h3>
+                    <h3 class="title-css">${datos.service[i].title}</h3>
                     <div class="row">
-                    <h5 class="col-4" style="text-align:left; font-size:15px;">Usuario:</h5><h5 style="text-align:left; font-size:15px;" class="col-8">${datos.user[i].usuario}</h5>
-                    <h5 class="col-4" style="text-align:left; font-size:15px;">Email:</h5><h5 style="text-align:left; font-size:15px;" class="col-8">${datos.user[i].email}</h5>
-                    <h5 class="col-4" style="text-align:left; font-size:15px;">Ident:</h5><h5 style="text-align:left; font-size:15px;" class="col-8">${datos.user[i].ruc}</h5>
-                    <h5 class="col-4" style="text-align:left; font-size:15px;">Tipo de cuenta:</h5><h5 style="text-align:left; font-size:15px;" class="col-8">${tipoCuenta(datos.user[i].typeAcc)}</h5>
-                    <h5 class="col-4" style="text-align:left; font-size:15px;">No. Usuario:</h5><h5 style="text-align:left; font-size:15px;" class="col-8">${datos.user[i].id}</h5>
-                    <h5 class="col-4" style="text-align:left; font-size:15px;">Estatus:</h5><h5 style="text-align:left; font-size:15px;" class="col-8">${estatusACC(datos.user[i].estatus)}</h5>
+                    <h5 class="col-4" style="text-align:left; font-size:15px;">Titulo:</h5><h5 style="text-align:left; font-size:15px;" class="col-8">${datos.service[i].title}</h5>
+                    <h5 class="col-4" style="text-align:left; font-size:15px;">Descripcion:</h5><h5 style="text-align:left; font-size:15px;" class="col-8">${datos.service[i].desc}</h5>
+                    <h5 class="col-4" style="text-align:left; font-size:15px;">ID:</h5><h5 style="text-align:left; font-size:15px;" class="col-8">${datos.service[i].id}</h5>                    
                   </div>
                   <div class="row" onmouseover="$(this).css('opacity','1.0');" onmouseleave="$(this).css('opacity','0.5');" style="height: 50px; opacity:0.5">
                     <div class="col-4">
-                      <div class="btn btn-secondary btn-block" style="width:100%;" onclick="editUser('${datos.user[i]._id}','${datos.user[i].nombre}')">Editar</div>
+                      <div class="btn btn-secondary btn-block" style="width:100%;" onclick="editService('${datos.service[i]._id}','${datos.service[i].title}')">Editar</div>
                     </div>
                   </div>
                   <br>
@@ -229,7 +213,7 @@ block extra_js
             );
             i++;
           }
-          $("#js_mant_user").fadeIn(500);
+          $("#js_mant_services").fadeIn(500);
         }
       });
     }

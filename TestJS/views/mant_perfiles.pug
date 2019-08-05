@@ -1,0 +1,40 @@
+extends base.pug
+
+block content
+  .toast.jam(aria-hidden='true')
+    span.close(aria-role='button', tabindex='0') ×
+    |   Lightly toasted with jam.
+
+  #capa.capaNone(onclick='closeNav()')
+  form.js-form.col-12.col(style="text-align : center;margin-top:60px;")
+    .form-group.card
+      h1 Mantenimiento de Perfiles
+  .row
+    .col-8.col-sm-10.offset-sm-1.col-md-3.col-lg-3.ml-2
+      input#userToFind.form-control.ml-2(type='text', placeholder='Buscar...', autocomplete='off')
+    .col-2.col-sm-10.offset-sm-1.col-md-3.col-lg-3.ml-4
+      button#btnBuscarUser.btn.btn-success(type='submit') Buscar
+      a(href="./registroperfiles"): button#btnNewService.btn.btn-success(type='submit') Nuevo
+  .row.mt-3(id="js_mant_perfiles")
+
+  #mySidenav.sidenav(style='width:0px;')
+    a.closebtn(href='javascript:void(0)', onclick='closeNav()') ×
+    
+    .form-group.ml-3.mr-3.text-white.js-form-slide
+      h3.col-12.col-centered#lblEdit Editar datos
+      
+      .row
+        .col-4.col-sm-4.col-md-2.col-lg-1.mt-3
+          label(style='font-size:20px;') Socio:
+        .col-8.col-sm-8.col-md-4.col-lg-3.mt-3
+          input.js-user-value.form-control(type="text", style="text-align:center;" id="edTitulo")
+
+        .col-4.col-sm-4.col-md-2.col-lg-1.mt-3
+          label(style='font-size:20px;') Servicio:
+        .col-8.col-sm-8.col-md-4.col-lg-3.mt-3
+          input.js-pass-value.form-control(type="text", style="text-align:center;" id="edDescripcion")
+          
+      .row.mt-5    
+        button.btn.btn-success.btn-block.mt-3.col-4.offset-4(type="button", style="margin-bottom:15px;" id="btnGuardarEd") Guardar
+        input#idHidden(type='hidden' value="")
+

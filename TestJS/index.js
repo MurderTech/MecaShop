@@ -55,12 +55,20 @@ app.get('/registroservicio', (req, res) => {
 //  res.render('mant_service.pug');
 });
 
+app.get('/registroperfiles', (req,res) => {
+  res.render('registro_perfiles.pug');
+})
+
 app.get('/prestaserv', (req, res) => {
   res.render('prestaserv.pug');
 });
 
 app.get('/userinfo', (req, res) => {
   res.render('user_info.pug');
+});
+
+app.get('/mperfiles', (req, res) => {
+  res.render('mant_perfiles.pug');
 });
 //REDIRECCIONES
 
@@ -159,6 +167,22 @@ app.post('/list_user', (req, res) => {
   });
 });
 
+app.post('/list_service', (req, res) => {
+  servicio.find({})
+  .exec((err,service) => {
+    if (err) {
+      res.status(400).json({
+        exito: false,
+        err
+      });
+    }
+
+    res.json({
+      service
+    });
+  });
+});
+
 app.post('/logines', (req, res) => {
 /*  PROCESO DE LOGIN*/
   const { user, pass } = req.body;
@@ -204,6 +228,27 @@ app.post('/findUser', (req, res) => {
     });
   });
 
+app.post('/findService', (req, res) => {
+  const filtro = req.body.clave;
+  let qry;
+  
+  if (isNaN(filtro)){
+    qry = { $or : [{"title": {$regex:'.*'+filtro+'.*'}}, {"desc": {$regex:'.*'+filtro+'.*'}}]};
+  } else {
+    qry = { $or : [{"id": filtro}, {"title": {$regex:'.*'+filtro+'.*'}}, {"desc": {$regex:'.*'+filtro+'.*'}}]};
+  }
+
+  servicio.find(qry)
+  .exec(function (err,findService){
+    if (err)
+      console.log(err);
+    
+    res.json({
+      findService,
+    });
+  });
+});
+
 app.post('/findUserByID', (req, res) => {
   /*  Buscar por ID*/
     const filtro = req.body.clave;
@@ -223,6 +268,20 @@ app.post('/findUserByID', (req, res) => {
     //.exec(function (err,findUser) {
     //});
   });
+
+app.post('/findServiceByID', (req, res) => {
+  const filtro = req.body.clave;
+  let qry = filtro;
+
+  servicio.findById(qry, function(err,findService){
+    if (err)
+      console.log(err);
+    
+    res.json({
+      findService,
+    });
+  })
+});
 
 app.post('/UpdateUserByID', (req, res) => {
   /*  Update User*/
@@ -249,6 +308,29 @@ app.post('/UpdateUserByID', (req, res) => {
     //.exec(function (err,findUser) {
     //});
   });
+
+  app.post('/UpdateServiceByID', (req, res) => {
+    /*  Update User*/
+      const filtro = req.body.clave;
+  
+      const title = req.body.title;
+      const desc = req.body.desc;
+  
+      let qry = filtro;
+  
+      //console.log(filtro);
+      //usuario.find({ $and : [{id: filtro}, {usuario: filtro}, {ruc: filtro}, {nombre: filtro}, {email: filtro}]})
+      servicio.findByIdAndUpdate(qry, {"title":title, "desc":desc},
+        (err, updated) =>{
+        if (err)
+          return res.status(500).send({message:`error al actualizar servicio: ${err}`})
+        
+        //console.log(findUser);  
+        res.status(200).send({producto:updated})
+      })
+      //.exec(function (err,findUser) {
+      //});
+    });
 
 
 app.post('/registrar', (req, res) => {
@@ -335,6 +417,10 @@ app.post('/registrar_servicio', (req, res) => {
     newID();
     
   });
+
+app.post('/registrar_perfil', (req, res) =>{
+  var srvxusr = new servxuser();
+});
 //PETICIONES
 
 
