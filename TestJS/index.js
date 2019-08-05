@@ -53,6 +53,10 @@ app.get('/registroservicio', (req, res) => {
 app.get('/prestaserv', (req, res) => {
   res.render('prestaserv.pug');
 });
+
+app.get('/userinfo', (req, res) => {
+  res.render('user_info.pug');
+});
 //REDIRECCIONES
 
 
