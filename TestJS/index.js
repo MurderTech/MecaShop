@@ -128,6 +128,22 @@ app.post('/list_user', (req, res) => {
   });
 });
 
+app.post('/list_service', (req, res) => {
+  servicio.find({})
+  .exec((err,service) => {
+    if (err) {
+      res.status(400).json({
+        exito: false,
+        err
+      });
+    }
+
+    res.json({
+      service
+    });
+  });
+});
+
 app.post('/logines', (req, res) => {
 /*  PROCESO DE LOGIN*/
   const { user, pass } = req.body;
@@ -172,6 +188,10 @@ app.post('/findUser', (req, res) => {
       });
     });
   });
+
+app.post('/findService', (req, res) => {
+  const filtro = req.body.clave;
+});
 
 app.post('/findUserByID', (req, res) => {
   /*  Buscar por ID*/
@@ -218,6 +238,29 @@ app.post('/UpdateUserByID', (req, res) => {
     //.exec(function (err,findUser) {
     //});
   });
+
+  app.post('/UpdateServiceByID', (req, res) => {
+    /*  Update User*/
+      const filtro = req.body.clave;
+  
+      const title = req.body.title;
+      const desc = req.body.desc;
+  
+      let qry = filtro;
+  
+      //console.log(filtro);
+      //usuario.find({ $and : [{id: filtro}, {usuario: filtro}, {ruc: filtro}, {nombre: filtro}, {email: filtro}]})
+      usuario.findByIdAndUpdate(qry, {"title":title, "desc":desc},
+        (err, updated) =>{
+        if (err)
+          return res.status(500).send({message:`error al actualizar servicio: ${err}`})
+        
+        //console.log(findUser);  
+        res.status(200).send({producto:updated})
+      })
+      //.exec(function (err,findUser) {
+      //});
+    });
 
 
 app.post('/registrar', (req, res) => {
