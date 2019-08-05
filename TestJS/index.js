@@ -50,6 +50,10 @@ app.get('/registroservicio', (req, res) => {
 //  res.render('mant_service.pug');
 });
 
+app.get('/registroperfiles', (req,res) => {
+  res.render('registro_perfiles.pug');
+})
+
 app.get('/prestaserv', (req, res) => {
   res.render('prestaserv.pug');
 });
@@ -386,6 +390,10 @@ app.post('/registrar_servicio', (req, res) => {
     newID();
     
   });
+
+app.post('/registrar_perfil', (req, res) =>{
+  var srvxusr = new servxuser();
+});
 //PETICIONES
 
 
