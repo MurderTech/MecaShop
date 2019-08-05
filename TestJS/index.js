@@ -57,6 +57,10 @@ app.get('/prestaserv', (req, res) => {
 app.get('/userinfo', (req, res) => {
   res.render('user_info.pug');
 });
+
+app.get('/mperfiles', (req, res) => {
+  res.render('mant_perfiles.pug');
+});
 //REDIRECCIONES
 
 
