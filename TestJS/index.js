@@ -2,6 +2,9 @@
 const path = require('path');
 const bodyParser = require('body-parser');
 const express = require('express');
+const fileUpload = require('express-fileupload')
+const busboy = require('connect-busboy');
+
 const cupon = require('./models/cupon');
 const usuario = require('./models/usuario');
 const servicio = require('./models/service');
@@ -22,6 +25,8 @@ app.use(bodyParser());
 app.use('/public', express.static(path.join(__dirname, 'public')));
 app.use('/images', express.static(path.join(__dirname, 'images')));
 app.use('/style', express.static(path.join(__dirname, 'style')));
+app.use(fileUpload());
+app.use(busboy());
 
 
 // REDIRECCIONES
@@ -61,6 +66,28 @@ app.get('/userinfo', (req, res) => {
 
 
 //PETICIONES
+app.post('/changePic',(req,res) => {
+  var fstream;
+  req.pipe(req.busboy);
+  req.busboy.on('file', function (fieldname, file, filename) {
+    console.log("Uploading: " + filename); 
+      fstream = fs.createWriteStream(__dirname + '/images/' + filename);
+      file.pipe(fstream);
+      fstream.on('close', function () {
+        res.redirect('back');
+      });
+    });
+
+  console.log(req.files); 
+  
+  /*let EDFile = req.files.file
+  EDFile.mv(`./images/${EDFile.name}`,err => {
+      if(err) return res.status(500).send({ message : err })
+
+      return res.status(200).send({ message : 'File upload' })
+  })*/
+})
+
 app.post('/services', (req, res) => {
   //const { project } = req.body;
   servicio.find({})

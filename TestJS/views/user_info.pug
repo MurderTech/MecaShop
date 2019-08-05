@@ -1,1 +1,71 @@
 extends base.pug
+
+block content
+  div(style='height:100px;')
+  .row(id="js_ofertas")
+    .col-lg-4
+      .row
+        .col-10.offset-1
+          img.img-card-css#porfileIMG(onerror="this.src='images/defaultuser.jpg'" style="width:100%;")
+          h1#porfileUSER(style="text-align:center;")
+      .row
+        form(action='./changePic' method='POST')
+          input(type='file', name='file', style="/*width:0px;*/")
+          //button.btn.btn-success.btn-block.col-lg-4.offset-lg-4.col-4.offset-4(type="button", style="margin-bottom:15px;" id="btnCangePic") Cambiar foto
+          input(type='submit', value='Cambiar')
+    .col-lg-8.mt-4.mb-5.card
+      .row.mt-lg-5
+        p.col-lg-2.col-3.mt-1.pl-4.text-muted Nombre:
+        h5#porfileNAME.col-lg-4.col-9.form-contro.mt-1.pl-1
+        p.col-lg-2.col-3.mt-1.pl-4.text-muted Ident:
+        h5#porfileIDEN.col-lg-4.col-9.form-contro.mt-1.pl-1
+      .row.mt-lg-5
+        p.col-lg-2.col-3.mt-1.pl-4.text-muted Email:
+        h5#porfileEMAI.col-lg-4.col-9.form-contro.mt-1.pl-1
+      
+      .row.mt-lg-5
+        button.btn.btn-success.btn-block.col-lg-4.offset-lg-4.col-4.offset-4(type="button", style="margin-bottom:15px;" id="btnEdit") Editar Información
+
+block extra_js
+  script.
+    $(document).ready(function(){
+      $('#js_ofertas').hide();
+      
+      $('#porfileIMG').attr('src','images/'+getCookie("usuario")+'.png');
+      $('#porfileUSER').html(getCookie("usuario"));
+
+      $('#porfileNAME').html(getCookie("nombre"));
+      $('#porfileIDEN').html(getCookie("ruc"));
+      $('#porfileEMAI').html(getCookie("email"));
+
+      $('#js_ofertas').fadeIn(500);
+    })
+
+    $('#btnCangePic').click(function(){
+      $('#fileupload').trigger("click");
+    });
+
+    $('#fileupload').change(function(){
+      //alert($('#fileupload').val());
+      var f = $(this);
+      console.log(f);
+
+      /*$.ajax({
+        data: {
+          file : f,
+          to : getCookie("usuario"),
+        },
+        method: 'POST',
+        url: './changePic',
+        success: function(datos){
+          Swal.fire(
+            'Usuario creado con éxito',
+            'Inicie sesión',
+            'success'
+            ).then((value)=>{
+              window.location.href = "./login";
+            });
+        }
+        
+      });*/
+    });
