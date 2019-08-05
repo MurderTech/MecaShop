@@ -27,7 +27,7 @@ block extra_js
             console.log(datos.service[i]);
             $("#js_ofertas").append(
               `<div class="col-12 col-sm-12 col-md-6 col-lg-4">
-                <div class="menu-item-css" style="background-image:url(images/service/${datos.service[i].title}.jpg);">
+                <div class="menu-item-css" style="background-image:url(images/service/${datos.service[i].title}.jpg); background-color:#343A40;">
                   <div class="row" onclick="viewServices('${datos.service[i].id}')">
                       <div class="col-8 offset-2 mt-5 mb-5 cardinfo-css card">
                         <h4 class="title-css">${datos.service[i].title}</h4>

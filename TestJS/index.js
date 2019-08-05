@@ -3,7 +3,8 @@ const path = require('path');
 const bodyParser = require('body-parser');
 const express = require('express');
 const fileUpload = require('express-fileupload')
-const busboy = require('connect-busboy');
+const Busboy = require('busboy');
+const fs = require('fs');
 
 const cupon = require('./models/cupon');
 const usuario = require('./models/usuario');
@@ -26,7 +27,6 @@ app.use('/public', express.static(path.join(__dirname, 'public')));
 app.use('/images', express.static(path.join(__dirname, 'images')));
 app.use('/style', express.static(path.join(__dirname, 'style')));
 app.use(fileUpload());
-app.use(busboy());
 
 
 // REDIRECCIONES
@@ -70,30 +70,36 @@ app.get('/userinfo', (req, res) => {
 app.get('/mperfiles', (req, res) => {
   res.render('mant_perfiles.pug');
 });
+
+app.get('/test', (req, res) => {
+  res.render('test.pug');
+});
 //REDIRECCIONES
 
 
 //PETICIONES
-app.post('/changePic',(req,res) => {
-  var fstream;
-  req.pipe(req.busboy);
-  req.busboy.on('file', function (fieldname, file, filename) {
-    console.log("Uploading: " + filename); 
-      fstream = fs.createWriteStream(__dirname + '/images/' + filename);
-      file.pipe(fstream);
-      fstream.on('close', function () {
-        res.redirect('back');
-      });
-    });
+app.post('/test',(req,res) => {
+  var busboy = new Busboy({ headers: req.headers });
 
-  console.log(req.files); 
-  
-  /*let EDFile = req.files.file
-  EDFile.mv(`./images/${EDFile.name}`,err => {
-      if(err) return res.status(500).send({ message : err })
+  console.log(busboy);
 
-      return res.status(200).send({ message : 'File upload' })
-  })*/
+  busboy.on('file', function(fieldname, file, filename, encoding, mimetype) {
+
+    console.log('Entre al file');
+
+    var saveTo = path.join('/images', filename);
+    console.log('Uploading: ' + saveTo);
+    file.pipe(fs.createWriteStream(saveTo));
+  });
+  busboy.on('error',function(){
+    console.log('error');
+  });
+  busboy.on('finish', function() {
+    console.log('Upload complete');
+    res.writeHead(200, { 'Connection': 'close' });
+    res.end("That's all folks!");
+  });
+  return req.pipe(busboy);
 })
 
 app.post('/services', (req, res) => {
