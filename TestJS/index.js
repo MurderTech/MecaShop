@@ -10,6 +10,7 @@ const cupon = require('./models/cupon');
 const usuario = require('./models/usuario');
 const servicio = require('./models/service');
 const servxuser = require('./models/servxuser')
+const trabajo = require('./models/trabajo')
 const { connectDb } = require('./mongoose');
 const { test } = require('./utils');
 const app = express();
@@ -101,6 +102,23 @@ app.post('/test',(req,res) => {
   });
   return req.pipe(busboy);
 })
+
+app.post('/list-trabajo', (req, res) => {
+  const idCat = req.body.idCat;
+  trabajo.find({"idCategory": idCat})
+  .exec((err, work) => {
+      if (err) {
+          res.status(400).json({
+              exito: false,
+              err
+          });
+      }
+      //console.log(`pase por cupones ${res.json}`);
+      res.json({
+        work,
+      });
+  });
+});
 
 app.post('/services', (req, res) => {
   //const { project } = req.body;

@@ -54,7 +54,8 @@ html(lang="en")
 
                 if (datos.logines.length > 0) {
                   if (datos.logines[0].estatus === 1){
-                    setLogin(datos.logines[0].id,
+                    setLogin(datos.logines[0]._id,
+                            datos.logines[0].id,
                             datos.logines[0].usuario,
                             datos.logines[0].ruc,
                             datos.logines[0].nombre,
@@ -82,10 +83,11 @@ html(lang="en")
           });
         });
 
-        function setLogin(_id, _usuario, _ruc, _nombre, _email, _typeAcc) {
+        function setLogin(reID, _id, _usuario, _ruc, _nombre, _email, _typeAcc) {
           var d = new Date();
           d.setTime(d.getTime() + (60*24*60*60*1000));
           var expires = "expires="+ d.toUTCString();
+          document.cookie = "reID ="+reID+";" + expires + ";path=/";
           document.cookie = "id ="+_id+";" + expires + ";path=/";
           document.cookie = "usuario ="+_usuario+";" + expires + ";path=/";
           document.cookie = "ruc ="+_ruc+";" + expires + ";path=/";
@@ -95,6 +97,7 @@ html(lang="en")
         }
 
         function delete_cookie() {
+          document.cookie = 'reID = ; expires=Thu, 01 Jan 1970 00:00:01 GMT;';
           document.cookie = 'id = ; expires=Thu, 01 Jan 1970 00:00:01 GMT;';
           document.cookie = 'usuario = ; expires=Thu, 01 Jan 1970 00:00:01 GMT;';
           document.cookie = 'ruc = ; expires=Thu, 01 Jan 1970 00:00:01 GMT;';

@@ -1,6 +1,7 @@
 extends base.pug
 
 block content
+  #capa.capaNone(onclick='closeNav()')
   div(style='height:100px;')
   .row(id="js_ofertas")
     .col-lg-4
@@ -21,7 +22,38 @@ block content
         p#porfileEMAI.col-lg-4.col-9.form-contro.mt-1.pl-1
       
       .row.mt-lg-5
-        button.btn.btn-success.btn-block.col-lg-4.offset-lg-4.col-4.offset-4(type="button", style="margin-bottom:15px;" id="btnEdit") Editar Información
+        button.btn.btn-success.btn-block.col-lg-4.offset-lg-4.col-4.offset-4(
+          type="button", style="margin-bottom:15px;" id="btnEdit") Editar Información
+      
+  .row.mt-5
+    #js-trabajos.col-10.offset-1.col-lg-6.offset-lg-3.card(style='')
+      
+
+  #mySidenav.sidenav(style='width:0px;')
+    a.closebtn(href='javascript:void(0)', onclick='closeNav()') ×
+    
+    .form-group.ml-3.mr-3.text-white.js-form-slide
+      h3.col-12.col-centered#lblEdit Editar datos
+      
+      .row
+        .col-4.col-sm-4.col-md-2.col-lg-1.mt-3
+          label(style='font-size:20px;') Nombre:
+        .col-8.col-sm-8.col-md-4.col-lg-3.mt-3
+          input.js-user-value.form-control(type="text", style="text-align:center;" id="edNombre")
+
+        .col-4.col-sm-4.col-md-2.col-lg-1.mt-3
+          label(style='font-size:20px;') Email:
+        .col-8.col-sm-8.col-md-4.col-lg-3.mt-3
+          input.js-pass-value.form-control(type="text", style="text-align:center;" id="edEmail")
+
+        .col-4.col-sm-4.col-md-2.col-lg-1.mt-3
+          label(style='font-size:20px;') Ident:
+        .col-8.col-sm-8.col-md-4.col-lg-3.mt-3
+          input.js-pass-value.form-control(type="text", style="text-align:center;" id="edRuc")
+          
+      .row.mt-5    
+        button.btn.btn-success.btn-block.mt-3.col-4.offset-4(type="button", style="margin-bottom:15px;" id="btnGuardarEd") Guardar
+        input#idHidden(type='hidden' value="")
 
 block extra_js
   script.
@@ -42,27 +74,60 @@ block extra_js
       $('#fileupload').trigger("click");
     });
 
-    $('#fileupload').change(function(){
-      //alert($('#fileupload').val());
-      var f = $(this);
-      console.log(f);
+    $('#btnEdit').click(function(){
+      openNav();
+      $('#edNombre').val(getCookie("nombre"));
+      $('#edEmail').val(getCookie("email"));
+      $('#edRuc').val(getCookie("ruc"));
+      $('#idHidden').val(getCookie("reID"));
+    })
 
-      /*$.ajax({
+    $('#btnGuardarEd').click(function(){
+      $.ajax({
         data: {
-          file : f,
-          to : getCookie("usuario"),
+          clave: $('#idHidden').val(),
+          nombre: $('#edNombre').val(),
+          email: $('#edEmail').val(),
+          ruc: $('#edRuc').val(),
+          typeAcc: getCookie("typeAcc"),
+          estatus: '1',
         },
         method: 'POST',
-        url: './changePic',
+        url: './UpdateUserByID',
         success: function(datos){
-          Swal.fire(
-            'Usuario creado con éxito',
-            'Inicie sesión',
-            'success'
-            ).then((value)=>{
+          Swal.fire({
+            position: 'top',
+            type: 'success',
+            title: 'Datos modificado con exito',
+            showConfirmButton: false,
+            timer: 1500
+          }).then((value)=>{
               window.location.href = "./login";
             });
-        }
-        
-      });*/
-    });
+        }       
+      });
+    })
+
+
+    function openNav() {
+      if (document.getElementById("mySidenav").style.width == "0px"){
+        $('.js-form-slide').hide();
+        $('#capa').fadeIn('slow');
+        document.getElementById("capa").className = "capaBlock";
+        document.getElementById("mySidenav").style.width = `90%`;
+        $('.js-form-slide').fadeIn(1000);
+      } else {
+        $('.js-form-slide').fadeOut(100);
+        $('#capa').fadeOut('slow');
+        document.getElementById("capa").className = "capaNone";
+        document.getElementById("mySidenav").style.width = "0px";
+      }
+          
+    }
+
+    function closeNav() {
+      $('.js-form-slide').fadeOut(100);
+      $('#capa').fadeOut('slow');
+      document.getElementById("capa").className = "capaNone";
+      document.getElementById("mySidenav").style.width = "0px";
+    }
