@@ -68,8 +68,8 @@ app.get('/userinfo', (req, res) => {
   res.render('user_info.pug');
 });
 
-app.get('/mperfiles', (req, res) => {
-  res.render('mant_perfiles.pug');
+app.get('/mtrabajo', (req, res) => {
+  res.render('mant_trabajo.pug');
 });
 
 app.get('/test', (req, res) => {
@@ -118,6 +118,46 @@ app.post('/list-trabajo', (req, res) => {
         work,
       });
   });
+});
+
+app.post('/newWork', (req, res) => {
+  const {idCat, title, descr} = req.body;
+  
+  var task = new trabajo();
+
+  function newID(){
+    trabajo.find().sort({id:-1}).limit(1)
+    .exec((err, maxusr) => {
+      if (err) {
+        console.log(err);
+      }
+      if (maxusr[0] !== undefined){
+        task.id = maxusr[0].id+1
+      } else {
+        task.id = 0;
+      }
+      task.idCategory = idCat
+      task.title = title
+      task.descr = descr
+
+      task.save(function(err){
+        if (err) {
+          console.log('bad');
+          res.status(400).json({
+            exito: false,
+            err
+          });
+        }else{
+          console.log('fine');
+          res.status(200).json({
+            exito: true})
+        }
+      })
+    })
+  }
+
+  newID();
+
 });
 
 app.post('/services', (req, res) => {
