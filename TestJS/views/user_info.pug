@@ -24,9 +24,26 @@ block content
       .row.mt-lg-5
         button.btn.btn-success.btn-block.col-lg-4.offset-lg-4.col-4.offset-4(
           type="button", style="margin-bottom:15px;" id="btnEdit") Editar Información
-      
-  .row.mt-5
-    #js-trabajos.col-10.offset-1.col-lg-6.offset-lg-3.card(style='')
+  
+  .row#socio-serv
+    .col-12.col-lg-6.card.pb-3
+      .row
+        .col-12
+          h5.ml-3 Busca un servicio para agregar
+        .col-8.col-lg-6.ml-2
+          input#userToFind.form-control(type='text', placeholder='Buscar...', autocomplete='off')
+        .col-2.col-lg-2
+          button#btnBuscarUser.btn.btn-success(type='submit') Buscar
+        .container.mt-3(id="js_mant_trabajo")
+
+    .col-12.col-lg-6.card.pb-3
+      .row.mt-2.mt-lg-0
+        .col-12
+          h5.ml-3 Trabajos que realizas actualmente
+        .col-8.col-lg-6.ml-2.mr-2
+          select#cbxCategory.form-control(onchange="alert('yeyo')")
+        
+        .container.mt-3(id="js_mine_work")
       
 
   #mySidenav.sidenav(style='width:0px;')
@@ -58,6 +75,10 @@ block content
 block extra_js
   script.
     $(document).ready(function(){
+      if (getCookie("typeAcc")==='0'){
+        $('#socio-serv').hide();
+      }
+
       $('#js_ofertas').hide();
       
       $('#porfileIMG').attr('src','images/'+getCookie("usuario")+'.png');
@@ -68,7 +89,101 @@ block extra_js
       $('#porfileEMAI').html(getCookie("email"));
 
       $('#js_ofertas').fadeIn(500);
+
+      $.ajax({
+        data: {
+        },
+        url: './services',
+        method: 'POST',
+        success: function(datos){
+          var i = 0;
+          while (i < datos.service.length){
+            $("#cbxCategory").append(new Option(datos.service[i].title, datos.service[i].id));
+            //myJson = myJson + ',"' + datos.service[i].id + '":"' + datos.service[i].title+'"';
+            i++;
+          }
+        }
+
+      })
     })
+
+
+    $('#btnBuscarUser').click(function(){
+      $('#js_mant_trabajo').hide();
+      $('#js_mant_trabajo').empty();
+      $.ajax({
+        data: {
+          clave: $("#userToFind").val(),
+        },
+        method: 'POST',
+        url: './findTask',
+        success: function(datos){
+          var i = 0;
+          var colorx;
+          while (i < datos.findTask.length) {
+            if (i % 2 === 0){
+              colorx = '#F0F0F0';
+            }else{
+              colorx = '#FDFDFD'
+            }
+
+            $("#js_mant_trabajo").append(
+              `<div class="row" style="background-color:${colorx}">
+                <div class="col-10">
+                  <h5>${datos.findTask[i].title}</h5>
+                  <p>${datos.findTask[i].descr}</p>
+                </div>
+                <div class=col-1>
+                  <image class="mt-3" src="images/btn/add.png" style="width:100%" onclick="addWork('${datos.findTask[i].id}')">
+                </div>
+              </div>`
+            );
+            i++;
+          }
+          $('#js_mant_trabajo').fadeIn(500);
+        }
+      })
+    })
+
+
+    function addWork(idServ){
+      Swal.fire({
+      title: 'Coloca un precio a este servicio',
+      input: 'number',
+      showCancelButton: true,
+      confirmButtonText: 'Confirmar',
+      showLoaderOnConfirm: true,
+      preConfirm: (precio) => {
+        $.ajax({
+          data: {
+            idUser : getCookie("id"),
+            idServ : idServ,
+            price  : precio,
+          },
+          url: './addWorkToUser',
+          method: 'POST',
+          success: function(datos){
+            Swal.fire({
+              position: 'top',
+              type: 'success',
+              title: 'Trabajo agregado',
+              showConfirmButton: false,
+              timer: 1500
+            })
+          }
+        })
+      },
+      allowOutsideClick: () => !Swal.isLoading()
+    }).then((result) => {
+      if (result.value) {
+        Swal.fire({
+          title: `${result.value.login}'s avatar`,
+          imageUrl: result.value.avatar_url
+        })
+      }
+    })
+    }
+
 
     $('#btnCangePic').click(function(){
       $('#fileupload').trigger("click");

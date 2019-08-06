@@ -120,6 +120,36 @@ app.post('/list-trabajo', (req, res) => {
   });
 });
 
+app.post('/findTaskById', (req, res) => {
+  const clave = req.body.clave;
+  trabajo.findById(clave, function(err, findTask){
+    if (err)
+      console.log(err);
+    
+    //console.log(findUser);  
+    res.json({
+      findTask,
+    });
+  })
+});
+
+app.post('/findTask', (req, res) => {
+  const filtro = req.body.clave;
+  let qry;
+  
+  qry = { $or : [{"title": {$regex:'.*'+filtro+'.*'}}, {"descr": {$regex:'.*'+filtro+'.*'}}]};
+
+  trabajo.find(qry)
+  .exec(function (err,findTask){
+    if (err)
+      console.log(err);
+    
+    res.json({
+      findTask,
+    });
+  });
+});
+
 app.post('/newWork', (req, res) => {
   const {idCat, title, descr} = req.body;
   
@@ -160,6 +190,31 @@ app.post('/newWork', (req, res) => {
 
 });
 
+
+app.post('/UpdateTaskByID', (req, res) => {
+  /*  Update User*/
+    const filtro = req.body.clave;
+
+    const title = req.body.title;
+    const descr = req.body.descr;
+
+    let qry = filtro;
+
+    //console.log(filtro);
+    //usuario.find({ $and : [{id: filtro}, {usuario: filtro}, {ruc: filtro}, {nombre: filtro}, {email: filtro}]})
+    trabajo.findByIdAndUpdate(qry, {"title":title, "descr":descr},
+      (err, updated) =>{
+      if (err)
+        return res.status(500).send({message:`error al instertar: ${err}`})
+      
+      //console.log(findUser);  
+      res.status(200).send({producto:updated})
+    })
+    //.exec(function (err,findUser) {
+    //});
+  });
+
+
 app.post('/services', (req, res) => {
   //const { project } = req.body;
   servicio.find({})
@@ -176,6 +231,68 @@ app.post('/services', (req, res) => {
       });
   });
 });
+
+app.post('/addWorkToUser', (req, res) => {
+  const {idUser, idServ, price} = req.body;
+  
+  var task = new servxuser();
+
+  task.idUSer = idUser
+  task.idServ = idServ
+  task.price = price
+
+  task.save(function(err){
+    if (err) {
+      console.log('bad');
+      res.status(400).json({
+        exito: false,
+        err
+      });
+    }else{
+      console.log('fine');
+      res.status(200).json({
+        exito: true})
+    }
+  })
+
+});
+
+app.post('/workUser', (req, res) => {
+  let idUser = req.body.idu;
+  //console.log(idserv);
+
+  let qry = {"idUser":idUser};
+
+  servxuser.find(qry,"idServ")
+  .exec(function (err,servxuser) {
+    if (err)
+      console.log(err);
+    //console.log(servxuser[0].idUser);
+    let i = 0;
+    let filtro = '';
+    if (servxuser.length > 0){
+      while (i < servxuser.length){
+        filtro = filtro + ',' + servxuser[0].idServ;
+  
+        i++;
+      }
+      filtro = filtro.substring(1, 999);
+  
+      let filtroJSON = JSON.parse("["+filtro+"]")
+  
+      trabajo.find({"id": {$in: filtroJSON}})
+      .exec(function (err,workxuser){
+        res.json({
+          workxuser,
+        });
+      })
+    } else {
+      res.json({message:'No hay usuarios brindando este servicio en este momento'});
+    }
+    
+  });
+});
+
 
 app.post('/servxuser', (req, res) => {
   let idserv = req.body.ids;

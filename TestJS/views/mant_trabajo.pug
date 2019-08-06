@@ -10,12 +10,20 @@ block content
     .form-group.card
       h1 Mantenimiento de Trabajos
   .row
-    .col-8.col-sm-10.offset-sm-1.col-md-3.col-lg-3.ml-2
-      input#userToFind.form-control.ml-2(type='text', placeholder='Buscar...', autocomplete='off')
-    .col-2.col-sm-10.offset-sm-1.col-md-3.col-lg-3.ml-4
-      button#btnBuscarUser.btn.btn-success(type='submit') Buscar
-      button#btnNewWork.btn.btn-success(type='submit', style="margin-left:15px;") Nuevo
-  .row.mt-3(id="js_mant_perfiles")
+    .col-12.col-lg-6
+      .row
+        .col-8.col-lg-6.ml-2
+          input#userToFind.form-control(type='text', placeholder='Buscar...', autocomplete='off')
+        .col-2.col-lg-2
+          button#btnBuscarUser.btn.btn-success(type='submit') Buscar
+    .col-12.col-lg-6
+      .row.mt-2.mt-lg-0
+        .col-8.col-lg-6.ml-2
+          select#cbxCategory.form-control
+        .col-2.col-lg-2
+          button#btnNewWork.btn.btn-success(type='submit') Nuevo
+  
+  .row.mt-3(id="js_mant_trabajo")
 
   #mySidenav.sidenav(style='width:0px;')
     a.closebtn(href='javascript:void(0)', onclick='closeNav()') ×
@@ -25,14 +33,14 @@ block content
       
       .row
         .col-4.col-sm-4.col-md-2.col-lg-1.mt-3
-          label(style='font-size:20px;') Socio:
+          label(style='font-size:20px;') Titulo:
         .col-8.col-sm-8.col-md-4.col-lg-3.mt-3
-          input.js-user-value.form-control(type="text", style="text-align:center;" id="edTitulo")
+          input.js-user-value.form-control(type="text", style="text-align:center;" id="edTitle")
 
         .col-4.col-sm-4.col-md-2.col-lg-1.mt-3
-          label(style='font-size:20px;') Servicio:
+          label(style='font-size:20px;') Descripción:
         .col-8.col-sm-8.col-md-4.col-lg-3.mt-3
-          input.js-pass-value.form-control(type="text", style="text-align:center;" id="edDescripcion")
+          input.js-pass-value.form-control(type="text", style="text-align:center;" id="edDescr")
           
       .row.mt-5    
         button.btn.btn-success.btn-block.mt-3.col-4.offset-4(type="button", style="margin-bottom:15px;" id="btnGuardarEd") Guardar
@@ -41,8 +49,226 @@ block content
 block extra_js
   script.
     $(document).ready(function(){
+      $('#js_mant_trabajo').hide();
+
+      $.ajax({
+        data: {
+        },
+        url: './services',
+        method: 'POST',
+        success: function(datos){
+          var i = 0;
+          while (i < datos.service.length){
+            $("#cbxCategory").append(new Option(datos.service[i].title, datos.service[i].id));
+            i++;
+          }
+        }
+
+      })
+
+
+      $.ajax({
+        data:{
+          idCat : '0',
+        },
+        url: './list-trabajo',
+        method : 'POST',
+        success:function(datos){
+          //console.log(datos);
+          var i = 0;
+          while (i < datos.work.length) {
+            $("#js_mant_trabajo").append(
+              `<div class="col-12 col-sm-12 col-md-6 col-lg-4">
+                <div class="menu-item-css" style="background-image:url(images/service/default.jpg); background-color:#343A40;">
+                  <div class="row">
+                      <div class="col-8 offset-2 mt-2 mb-2 card" style="height:150px;">
+                        <h4 class="title-css">${datos.work[i].title}</h4>
+                        <h5>${datos.work[i].descr}</h5>
+                      </div>
+                    </div>
+                    <div class="row">
+                      <div class="col-4 offset-4"><button class="btn btn-danger" onclick="viewServices('${datos.work[i]._id}')">Editar</button></div>
+                    </div>
+                  </div>
+                </div>`
+            );
+            i++;
+          }
+          $('#js_mant_trabajo').fadeIn(500);
+        }
+      })
 
     });
+
+    $('#btnBuscarUser').click(function(){
+      $('#js_mant_trabajo').hide();
+      $('#js_mant_trabajo').empty();
+      $.ajax({
+        data: {
+          clave: $("#userToFind").val(),
+        },
+        method: 'POST',
+        url: './findTask',
+        success: function(datos){
+          var i = 0;
+          while (i < datos.findTask.length) {
+            $("#js_mant_trabajo").append(
+              `<div class="col-12 col-sm-12 col-md-6 col-lg-4">
+                <div class="menu-item-css" style="background-image:url(images/service/default.jpg); background-color:#343A40;">
+                  <div class="row" onclick="viewServices('${datos.findTask[i].id}')">
+                      <div class="col-8 offset-2 mt-2 mb-2 card" style="height:150px;">
+                        <h4 class="title-css">${datos.findTask[i].title}</h4>
+                        <h5>${datos.findTask[i].descr}</h5>
+                      </div>
+                    </div>
+                    <div class="row">
+                      <div class="col-4 offset-4"><button class="btn btn-danger" onclick="viewServices('${datos.findTask[i]._id}')">Editar</button></div>
+                    </div>
+                  </div>
+                </div>`
+            );
+            i++;
+          }
+          $('#js_mant_trabajo').fadeIn(500);
+        }
+      })
+    })
+
+    $('#cbxCategory').on('change',function(){
+      $("#js_mant_trabajo").empty();
+      $("#js_mant_trabajo").hide();
+      $.ajax({
+        data:{
+          idCat : $(this).val(),
+        },
+        url: './list-trabajo',
+        method : 'POST',
+        success:function(datos){
+          //console.log(datos);
+          var i = 0;
+          while (i < datos.work.length) {
+            $("#js_mant_trabajo").append(
+              `<div class="col-12 col-sm-12 col-md-6 col-lg-4">
+                <div class="menu-item-css" style="background-image:url(images/service/default.jpg); background-color:#343A40;">
+                  <div class="row" onclick="viewServices('${datos.work[i].id}')">
+                      <div class="col-8 offset-2 mt-2 mb-2 card" style="height:150px;">
+                        <h4 class="title-css">${datos.work[i].title}</h4>
+                        <h5>${datos.work[i].descr}</h5>
+                      </div>
+                    </div>
+                    <div class="row">
+                      <div class="col-4 offset-4"><button class="btn btn-danger" onclick="viewServices('${datos.work[i]._id}')">Editar</button></div>
+                    </div>
+                  </div>
+                </div>`
+            );
+            i++;
+          }
+          $('#js_mant_trabajo').fadeIn(500);
+        }
+      })
+    })
+
+
+    function viewServices(IDSERV){
+      $.ajax({
+        data: {
+          clave: IDSERV,
+        },
+        method: 'POST',
+        url: './findTaskById',
+        success: function(datos){
+          console.log(datos.findUser)
+          $('#lblEdit').html(`Editar datos de <br>${datos.findTask.title}`)
+          $('#edTitle').val(`${datos.findTask.title}`)
+          $('#edDescr').val(`${datos.findTask.descr}`)
+          $('#idHidden').val(`${datos.findTask._id}`)
+        }
+        
+      });
+
+      openNav();
+    }
+
+    $('#btnGuardarEd').click(function(){
+      $.ajax({
+        data: {
+          clave: $('#idHidden').val(),
+          title: $('#edTitle').val(),
+          descr: $('#edDescr').val(),
+        },
+        method: 'POST',
+        url: './UpdateTaskByID',
+        success: function(datos){
+          Swal.fire({
+            position: 'top',
+            type: 'success',
+            title: 'Usuario modificado con exito',
+            showConfirmButton: false,
+            timer: 1500
+          })
+          closeNav();
+
+          $("#js_mant_trabajo").empty();
+          $("#js_mant_trabajo").hide();
+          $.ajax({
+            data:{
+              idCat : $('#cbxCategory').val(),
+            },
+            url: './list-trabajo',
+            method : 'POST',
+            success:function(datos){
+              //console.log(datos);
+              var i = 0;
+              while (i < datos.work.length) {
+                $("#js_mant_trabajo").append(
+                  `<div class="col-12 col-sm-12 col-md-6 col-lg-4">
+                    <div class="menu-item-css" style="background-image:url(images/service/default.jpg); background-color:#343A40;">
+                      <div class="row" onclick="viewServices('${datos.work[i].id}')">
+                          <div class="col-8 offset-2 mt-2 mb-2 card" style="height:150px;">
+                            <h4 class="title-css">${datos.work[i].title}</h4>
+                            <h5>${datos.work[i].descr}</h5>
+                          </div>
+                        </div>
+                        <div class="row">
+                          <div class="col-4 offset-4"><button class="btn btn-danger" onclick="viewServices('${datos.work[i]._id}')">Editar</button></div>
+                        </div>
+                      </div>
+                    </div>`
+                );
+                i++;
+              }
+              $('#js_mant_trabajo').fadeIn(500);
+            }
+          })
+          
+        }
+        
+      });
+    })
+
+    function openNav() {
+      if (document.getElementById("mySidenav").style.width == "0px"){
+        $('.js-form-slide').hide();
+        $('#capa').fadeIn('slow');
+        document.getElementById("capa").className = "capaBlock";
+        document.getElementById("mySidenav").style.width = `90%`;
+        $('.js-form-slide').fadeIn(1000);
+      } else {
+        $('.js-form-slide').fadeOut(100);
+        $('#capa').fadeOut('slow');
+        document.getElementById("capa").className = "capaNone";
+        document.getElementById("mySidenav").style.width = "0px";
+      }
+          
+    }
+
+    function closeNav() {
+      $('.js-form-slide').fadeOut(100);
+      $('#capa').fadeOut('slow');
+      document.getElementById("capa").className = "capaNone";
+      document.getElementById("mySidenav").style.width = "0px";
+    }
 
     $('#btnNewWork').click(function(){
       var myJson = '';
@@ -83,7 +309,7 @@ block extra_js
             input: 'text',
           },
           { 
-            title: 'Dale una descripción al trabajo',
+            title: 'Coloca una descripción para este trabajo',
             input: 'text',
           }
         ]).then((result) => {
