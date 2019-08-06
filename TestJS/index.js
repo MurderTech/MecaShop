@@ -237,7 +237,7 @@ app.post('/addWorkToUser', (req, res) => {
   
   var task = new servxuser();
 
-  task.idUSer = idUser
+  task.idUser = idUser
   task.idServ = idServ
   task.price = price
 
@@ -298,37 +298,54 @@ app.post('/servxuser', (req, res) => {
   let idserv = req.body.ids;
   //console.log(idserv);
 
-  let qry = {"idServ":idserv};
+  let qry = {"idCategory":idserv};
 
-  servxuser.find(qry,"idUser")
-  .exec(function (err,servxuser) {
+  
+  //BUSCAMOS PRIMERO EN TRABAJOS
+  trabajo.find(qry,"id")
+  .exec(function(err, tWork){
     if (err)
       console.log(err);
-    //console.log(servxuser[0].idUser);
-    let i = 0;
-    let filtro = '';
-    if (servxuser.length > 0){
-      while (i < servxuser.length){
-        filtro = filtro + ',' + servxuser[0].idUser;
-  
-        i++;
+
+    let jsWork = '';
+    if (tWork.length > 0){
+      let x = 0;
+      while (x < tWork.length) {
+        jsWork = jsWork + ',' + tWork[x].id;
+        x++;
       }
-      filtro = filtro.substring(1, 999);
-  
-      let filtroJSON = JSON.parse("["+filtro+"]")
-  
-      usuario.find({"id": {$in: filtroJSON}})
-      .exec(function (err,servxuserF){
-        //console.log(servxuserF);
-        res.json({
-          servxuserF,
-        });
-      })
-    } else {
-      res.json({message:'No hay usuarios brindando este servicio en este momento'});
+      //console.log(jsWork);
+      jsWork = jsWork.substring(1, 999);
+      //console.log('Bien antes de 1');
+      let fWork = JSON.parse("["+jsWork+"]");
+      //console.log('Bien 1');
+      //LUEGO EN SERVXUSER A VER QUE USUARIOS TINEN ESTOS TRABAJOS
+      servxuser.find({"idServ": {$in: fWork}})
+      .exec(function (err, SXU){
+        if (SXU.length > 0) {
+          let jsSXU = '';
+          let x = 0;
+          while (x < SXU.length) {
+            jsSXU = jsSXU + ',' + SXU[x].idUser;
+            x++;
+          }
+          jsSXU = jsSXU.substring(1, 999);
+          let fSXU = JSON.parse("["+jsSXU+"]");
+          //console.log('Bien 2');
+
+          usuario.find({"id": {$in: fSXU}})
+          .exec(function (err,servxuserF){
+            
+            //console.log(servxuserF);
+            
+            res.json({
+              servxuserF,
+            });
+          })
+        }
+      }) 
     }
-    
-  });
+  })
 });
 
 app.post('/list_user', (req, res) => {

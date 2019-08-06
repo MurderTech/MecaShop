@@ -174,14 +174,7 @@ block extra_js
         })
       },
       allowOutsideClick: () => !Swal.isLoading()
-    }).then((result) => {
-      if (result.value) {
-        Swal.fire({
-          title: `${result.value.login}'s avatar`,
-          imageUrl: result.value.avatar_url
-        })
-      }
-    })
+      })
     }
 
 
