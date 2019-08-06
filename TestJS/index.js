@@ -293,6 +293,53 @@ app.post('/workUser', (req, res) => {
   });
 });
 
+app.post('/delWorkUser', (req, res) => {
+  let IDW = req.body.idWork;
+  let user = req.body.idUser;
+
+  servxuser.deleteMany({ $and: [{"idServ":IDW},{"idUser":user}]}).exec();
+
+  res.status(200).json({message:'good'});
+})
+
+app.post('/workerUser', (req, res) => {
+  let idUser = req.body.idUser;
+  //let idCategory = req.body.idCat;
+
+  servxuser.find({"idUser":idUser})
+  .exec(function(err, sucede){
+    if (err)
+      console.log(err);
+    
+    let jsSucede = '';
+    let jsPrice = [];
+    if (sucede.length > 0){
+      let x = 0;
+      while (x < sucede.length) {
+        jsSucede = jsSucede + ',' + sucede[x].idServ;
+        jsPrice.push({"jsPrice": sucede[x].price, "idServ": sucede[x].idServ});
+        x++;
+      }
+      jsSucede = jsSucede.substring(1, 999);
+      let JSONSucede = JSON.parse("["+jsSucede+"]");
+
+      //ARME EL IN DEL SEGUNDO QRY
+
+      trabajo.find({ $and: [{"id": {$in: JSONSucede}}]})
+      .exec(function(err, workerUser){
+        if (err){
+          console.log(err);
+        }
+
+        res.json({
+          workerUser,
+          jsPrice,
+        });
+      })
+    }
+  })
+});
+
 
 app.post('/servxuser', (req, res) => {
   let idserv = req.body.ids;
